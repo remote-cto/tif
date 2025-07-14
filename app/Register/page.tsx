@@ -587,6 +587,7 @@ const StudentRegistration: React.FC = () => {
           </p>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
