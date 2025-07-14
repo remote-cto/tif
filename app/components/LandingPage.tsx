@@ -14,8 +14,10 @@ const LandingPage = () => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-slate-900 overflow-hidden relative ">
+      
         {/* Hero Section with Video Background */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          
           {/* Background Video */}
           <video
             autoPlay
