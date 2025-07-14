@@ -1,9 +1,8 @@
-// lib/database.ts
 import { Pool } from 'pg';
 
 // Database connection configuration
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:ScSXzjLMSOvbfXHcOsniPmgtHkOakvZJ@hopper.proxy.rlwy.net:20704/railway',
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
