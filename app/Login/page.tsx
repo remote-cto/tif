@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../components/Footer";
 import Image from "next/image";
+import NewHeader from "../components/NewHeader";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -88,17 +89,13 @@ const LoginPage: React.FC = () => {
   };
 
   return (
+    <>
+    <NewHeader/>
     <div className="min-h-screen bg-white py-2 px-4 sm:px-6 lg:px-8">
-      <Image
-        src="/images/XWORKS.png"
-        alt="XWORKS Logo"
-        width={148}
-        height={148}
-        className="text-white w-[70px] h-[48px] md:w-[150px] md:h-[100px]"
-      />
+    
       <div className="max-w-md mx-auto">
         <div className="text-center mb-4">
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-full flex items-center justify-center mb-4 mt-25">
             <LogIn className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -204,6 +201,7 @@ const LoginPage: React.FC = () => {
       </div>
       <Footer />
     </div>
+    </>
   );
 };
 

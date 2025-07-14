@@ -43,7 +43,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-8">
               <Link
                 href="/"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -55,7 +55,7 @@ const Navbar = () => {
 
               <Link
                 href="/model"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -67,7 +67,7 @@ const Navbar = () => {
 
               <Link
                 href="/mappingtalent"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -79,7 +79,7 @@ const Navbar = () => {
 
               <Link
                 href="/readiness"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -91,7 +91,7 @@ const Navbar = () => {
 
               <Link
                 href="/capability"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -102,7 +102,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/access"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
@@ -113,7 +113,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/contact"
-                className={`relative transition-colors duration-300 group font-semibold text-lg ${
+                className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
                     ? 'text-slate-800 hover:text-slate-900' 
                     : 'text-slate-800 hover:text-slate-900'
