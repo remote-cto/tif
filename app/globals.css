@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@font-face {
+  font-family: 'Inter';
+  src: url('/font/Inter_24pt-Medium.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'InterRegular';
+  src: url('/font/Inter_24pt-Regular.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'InterBold';
+  src: url('/font/Inter_24pt-ExtraBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
