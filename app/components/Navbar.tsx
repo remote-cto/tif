@@ -161,49 +161,49 @@ const Navbar = () => {
             <div className="flex flex-col items-center justify-center flex-1 space-y-6">
               <Link
                 href="/"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/model"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 The Model
               </Link>
               <Link
                 href="/mappingtalent"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Mapping Talent
               </Link>
               <Link
                 href="/readiness"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Readiness
               </Link>
               <Link
                 href="/capability"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Capability Building
               </Link>
               <Link
                 href="/access"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Access
               </Link>
               <Link
                 href="/contact"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
+                className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Let's Talk
