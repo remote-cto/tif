@@ -1,197 +1,390 @@
-import React from 'react';
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
+"use client";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import Image from "next/image";
 
 const Page = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+      isValid = false;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+      isValid = false;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+      isValid = false;
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fill in all required fields correctly", {
+        duration: 3000,
+        position: "top-center",
+      });
+      return;
+    }
+
+    const loadingToast = toast.loading("Submitting your enquiry...");
+
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.dismiss(loadingToast);
+        toast.success(
+          "Thank you! Your enquiry has been submitted successfully.",
+          {
+            duration: 5000,
+            position: "top-center",
+          }
+        );
+
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        toast.dismiss(loadingToast);
+        toast.error("Failed to submit enquiry. Please try again.", {
+          duration: 5000,
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.dismiss(loadingToast);
+      toast.error(
+        "An error occurred while submitting the form. Please try again.",
+        {
+          duration: 5000,
+          position: "top-center",
+        }
+      );
+    }
+  };
+
+  const inputClasses = (errorField: string) => `
+    w-full rounded-lg border-2 p-3 text-sm
+    ${
+      errors[errorField as keyof typeof errors]
+        ? "border-red-500"
+        : "border-blue-200"
+    }
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+    transition-all duration-300 ease-in-out
+    shadow-[0_0_10px_rgba(59,130,246,0.1)]
+    hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]
+    focus:shadow-[0_0_20px_rgba(59,130,246,0.3)]
+    placeholder-gray-500
+  `;
+
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden font-['Inter']">
-        <Navbar/>
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-200 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-32 w-24 h-24 bg-purple-200 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-32 left-1/3 w-40 h-40 bg-cyan-200 rounded-full blur-3xl animate-pulse delay-2000"></div>
-      </div>
+    <>
+      <Navbar />
 
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 opacity-5">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(99,102,241,0.4) 1px, transparent 0)`,
-            backgroundSize: "60px 60px",
-          }}
-        ></div>
-      </div>
-
-      <div className="relative z-10 py-10 px-6 md:px-16 lg:px-24 mt-15">
-        <div className="max-w-5xl mx-auto">
-          {/* Heading with modern styling */}
-          <div className="text-center mb-3">
-            <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight font-['InterBold']">
-              Let's Talk
-            </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full shadow-lg"></div>
-          </div>
-
-          {/* Main content in elevated card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200/50 p-8 md:p-12 shadow-2xl shadow-blue-100/50">
-            {/* Opening section */}
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-700 mb-6 font-['Inter']">
-                You're Not Here by Accident
-              </h2>
-              <p className="text-xl text-slate-700 leading-relaxed font-['Inter']">
-                If you're reading this, it means you believe talent should be{" "}
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 font-['Inter']">
-                  measured better
-                </span>
-                ,{" "}
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600 font-['Inter']">
-                  trained smarter
-                </span>
-                , and{" "}
-                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 font-['Inter']">
-                  connected faster
-                </span>
-                .
+      <section className="pt-24 bg-gradient-to-br from-slate-50 via-white to-yellow-50 font-['Inter']">
+        {/* Hero Section */}
+        <div className="relative py-16 px-6 md:px-16 lg:px-24">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            {/* Text Content */}
+            <div className="flex-1 space-y-6">
+              <p className="text-xl text-slate-700 leading-relaxed">
+                You’re here. That’s the first signal.
+              </p>
+              <p className="text-xl text-slate-700 leading-relaxed">
+                We don't cold-sell. We align deeply. If you’re looking to
+                activate talent at scale, accelerate ecosystem impact, or
+                architect future-ready skill networks — we’d love to hear your
+                signal.
+              </p>
+              <p className="text-xl text-slate-700 leading-relaxed">
+                No forms. No bots. Just a conversation. Because the future won’t
+                be built by funnels. It’ll be built by resonance.
               </p>
             </div>
 
-            {/* Partners section */}
-            <div className="mb-12">
-              <h3 className="text-2xl font-bold text-slate-700 mb-8 text-center font-['Inter']">
-                We're looking to work with:
+            {/* Right Image */}
+            <div className="flex-1">
+              <Image
+                src="/images/Readiness.jpg"
+                alt="Signal Contact Illustration"
+                width={600}
+                height={400}
+                className="rounded-xl shadow-md object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Section Cards */}
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
+            {/* Card 1 */}
+            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+                🟨 For Institutions
               </h3>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* College partners card */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200/50 hover:border-blue-300/70 transition-all duration-300 group hover:shadow-lg hover:shadow-blue-100/50">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-3 group-hover:animate-pulse shadow-sm"></div>
-                    <p className="text-lg font-bold text-blue-700 font-['Inter']">
-                      Colleges
-                    </p>
-                  </div>
-                  <p className="text-slate-700 font-['Inter']">
-                    That want to be{" "}
-                    <span className="font-bold text-blue-700 font-['Inter']">regional AI-first hubs</span>
-                  </p>
-                </div>
-
-                {/* Corporate partners card */}
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-200/50 hover:border-purple-300/70 transition-all duration-300 group hover:shadow-lg hover:shadow-purple-100/50">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-purple-500 rounded-full mr-3 group-hover:animate-pulse shadow-sm"></div>
-                    <p className="text-lg font-bold text-purple-700 font-['Inter']">
-                      Corporates
-                    </p>
-                  </div>
-                  <p className="text-slate-700 font-['Inter']">
-                    Ready to hire for skill, not just pedigree
-                  </p>
-                </div>
-
-                {/* CSR leaders card */}
-                <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-200/50 hover:border-cyan-300/70 transition-all duration-300 group hover:shadow-lg hover:shadow-cyan-100/50">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-cyan-500 rounded-full mr-3 group-hover:animate-pulse shadow-sm"></div>
-                    <p className="text-lg font-bold text-cyan-700 font-['Inter']">
-                      CSR Leaders
-                    </p>
-                  </div>
-                  <p className="text-slate-700 font-['Inter']">
-                    Who want their money to create{" "}
-                    <span className="font-bold text-cyan-700 font-['Inter']">long-term skill equity</span>
-                  </p>
-                </div>
-
-                {/* Government partners card */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200/50 hover:border-green-300/70 transition-all duration-300 group hover:shadow-lg hover:shadow-green-100/50">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-green-500 rounded-full mr-3 group-hover:animate-pulse shadow-sm"></div>
-                    <p className="text-lg font-bold text-green-700 font-['Inter']">
-                      Government Partners
-                    </p>
-                  </div>
-                  <p className="text-slate-700 font-['Inter']">
-                    Or ecosystem partners building for{" "}
-                    <span className="font-bold text-green-700 font-['Inter']">GenAI-readiness</span>
-                  </p>
-                </div>
-              </div>
+              <p className="text-slate-700">
+                Looking to rewire placement models? Launch AI-first skill hubs?
+                Let’s co-create readiness.
+              </p>
             </div>
 
-            {/* Philosophy section */}
-            <div className="relative mb-12">
-              <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-orange-400 to-red-500 rounded-full shadow-sm"></div>
-              <div className="pl-8 py-6 bg-gradient-to-r from-orange-50/70 to-red-50/70 rounded-2xl border-l-4 border-orange-400 shadow-sm">
-                <div className="space-y-4">
-                  <p className="text-xl text-slate-700 font-semibold font-['Inter']">
-                    We don't cold-sell.
-                  </p>
-                  <p className="text-xl text-slate-700 font-semibold font-['Inter']">
-                    We align deeply.
-                  </p>
-                  <p className="text-xl text-slate-700 font-semibold font-['Inter']">
-                    And when we build, we build{" "}
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500 font-['Inter']">
-                      quietly, but powerfully.
+            {/* Card 2 */}
+            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+                🟨 For Business
+              </h3>
+              <p className="text-slate-700">
+                Tired of paper résumés and generic assessments? Let’s show you
+                signal-based hiring.
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+                🟨 For Policy & Ecosystems
+              </h3>
+              <p className="text-slate-700">
+                Building regional, equitable, intelligent talent networks? Let’s
+                align intentions.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <section className="bg-white font-mono  relative overflow-hidden">
+          <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-x-16 gap-y-12 lg:grid-cols-5">
+              <div className="lg:col-span-2 lg:py-12 space-y-8">
+                <div className="transform transition-all duration-300 hover:scale-105">
+                  <strong className="block text-blue-700 text-2xl lg:text-3xl mb-2">
+                    Phone
+                  </strong>
+                  <a
+                    href="https://wa.me/9662512899"
+                    target="_blank"
+                    className="text-[#061BB0] text-xl relative group
+        after:content-[''] after:absolute after:bottom-0 after:left-0
+        after:w-full after:h-0.5 after:bg-blue-400
+        after:transform after:scale-x-0 after:origin-left
+        after:transition-transform after:duration-300
+        group-hover:after:scale-x-100
+        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                  >
+                    +91 966-251-2899
+                  </a>
+                </div>
+
+                <div className="transform transition-all duration-300 hover:scale-105">
+                  <strong className="block text-[#061BB0] text-2xl lg:text-3xl mb-2">
+                    Email
+                  </strong>
+                  <a
+                    href="mailto:connect@remotecto.in"
+                    className="text-blue-600 text-xl relative group
+        after:content-[''] after:absolute after:bottom-0 after:left-0
+        after:w-full after:h-0.5 after:bg-blue-400
+        after:transform after:scale-x-0 after:origin-left
+        after:transition-transform after:duration-300
+        group-hover:after:scale-x-100
+        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                  >
+                    connect@remotecto.in
+                  </a>
+                </div>
+
+                <div className="transform transition-all duration-300 hover:scale-105">
+                  <strong className="block text-[#061BB0] text-2xl lg:text-3xl mb-2">
+                    Our Location
+                  </strong>
+                  <p
+                    className="text-blue-600 text-xl relative group flex items-center gap-2
+        after:content-[''] after:absolute after:bottom-0 after:left-0
+        after:w-full after:h-0.5 after:bg-blue-400
+        after:transform after:scale-x-0 after:origin-left
+        after:transition-transform after:duration-300
+        group-hover:after:scale-x-100
+        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                  >
+                    <span>Ahmedabad, </span>
+                    <span className="flex items-center">
+                      India
+                      <img
+                        src="https://flagcdn.com/w40/in.png"
+                        alt="India flag"
+                        className="w-5 h-auto ml-2 mr-1"
+                      />
                     </span>
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* Call to action */}
-            <div className="text-center mb-8">
-              <p className="text-xl text-slate-700 mb-6 font-['Inter']">
-                Let's talk — and let's co-create something India hasn't seen yet.
-              </p>
-            </div>
+              <div
+                className="rounded-lg bg-white p-8 lg:p-12
+              shadow-[0_0_20px_rgba(59,130,246,0.2)]
+              hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]
+              transition-shadow duration-300 ease-in-out
+              border-2 border-blue-100
+              lg:col-span-3"
+              >
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="sr-only" htmlFor="name">
+                      Name
+                    </label>
+                    <input
+                      required
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={inputClasses("name")}
+                      placeholder="Name *"
+                      type="text"
+                      id="name"
+                    />
+                    {errors.name && (
+                      <p className="mt-2 text-sm text-red-500">{errors.name}</p>
+                    )}
+                  </div>
 
-            {/* Contact information */}
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-8 border border-slate-200/50">
-              <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">📧</span>
+                  {/* Email and Phone Fields */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="sr-only" htmlFor="email">
+                        Email
+                      </label>
+                      <input
+                        required
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={inputClasses("email")}
+                        placeholder="Email address *"
+                        type="email"
+                        id="email"
+                      />
+                      {errors.email && (
+                        <p className="mt-2 text-sm text-red-500">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="sr-only" htmlFor="phone">
+                        Phone
+                      </label>
+                      <input
+                        required
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className={inputClasses("phone")}
+                        placeholder="Phone Number *"
+                        type="tel"
+                        id="phone"
+                      />
+                      {errors.phone && (
+                        <p className="mt-2 text-sm text-red-500">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <a 
-                    href="mailto:hello@xworks.live" 
-                    className="text-lg font-semibold text-blue-700 hover:text-blue-800 transition-colors font-['Inter']"
-                  >
-                    hello@xworks.live
-                  </a>
-                </div>
-                
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">📞</span>
+
+                  <div>
+                    <label className="sr-only" htmlFor="message">
+                      Message
+                    </label>
+                    <textarea
+                      required
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      className={inputClasses("message")}
+                      placeholder="Message *"
+                      rows={5}
+                      id="message"
+                    ></textarea>
+                    {errors.message && (
+                      <p className="mt-2 text-sm text-red-500">
+                        {errors.message}
+                      </p>
+                    )}
                   </div>
-                  <span className="text-lg font-semibold text-purple-700 font-['Inter']">
-                    +91-XXXXXXXXXX
-                  </span>
-                </div>
+
+                  <div className="mt-6">
+                    <button
+                      type="submit"
+                      className="inline-block w-full sm:w-auto px-5 py-3 
+                      bg-[#061BB0] text-white font-medium rounded-lg
+                      transform transition-all duration-300 ease-in-out
+                      hover:scale-105 hover:bg-blue-700
+                      shadow-[0_0_15px_rgba(59,130,246,0.2)]
+                      hover:shadow-[0_0_25px_rgba(59,130,246,0.4)]
+                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Send Enquiry
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-
-            {/* Closing line with emphasis - Added to match Mapping Talent page */}
-            <div className="text-center pt-8 border-t border-slate-200/50">
-              <p className="text-xl text-slate-600 font-semibold font-['Inter']">
-                Ready to transform how talent is discovered and developed?
-              </p>
-            </div>
           </div>
+        </section>
 
-          {/* Floating elements for visual interest */}
-          <div className="absolute top-32 right-10 w-6 h-6 bg-blue-400 rounded-full opacity-20 animate-bounce delay-300"></div>
-          <div className="absolute bottom-40 left-10 w-4 h-4 bg-purple-400 rounded-full opacity-20 animate-bounce delay-700"></div>
-          <div className="absolute top-1/2 right-20 w-8 h-8 bg-cyan-300 rounded-full opacity-15 animate-pulse delay-1000"></div>
-        </div>
-      </div>
-      <Footer/>
-    </section>
+        <Footer />
+      </section>
+    </>
   );
 };
 
