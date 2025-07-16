@@ -137,16 +137,16 @@ const Page = () => {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
             {/* Text Content */}
             <div className="flex-1 space-y-6">
-              <p className="text-xl text-slate-700 leading-relaxed">
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
                 You’re here. That’s the first signal.
               </p>
-              <p className="text-xl text-slate-700 leading-relaxed">
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
                 We don't cold-sell. We align deeply. If you’re looking to
                 activate talent at scale, accelerate ecosystem impact, or
                 architect future-ready skill networks — we’d love to hear your
                 signal.
               </p>
-              <p className="text-xl text-slate-700 leading-relaxed">
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
                 No forms. No bots. Just a conversation. Because the future won’t
                 be built by funnels. It’ll be built by resonance.
               </p>
@@ -168,10 +168,10 @@ const Page = () => {
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {/* Card 1 */}
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟨 For Institutions
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 Looking to rewire placement models? Launch AI-first skill hubs?
                 Let’s co-create readiness.
               </p>
@@ -179,10 +179,10 @@ const Page = () => {
 
             {/* Card 2 */}
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟨 For Business
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 Tired of paper résumés and generic assessments? Let’s show you
                 signal-based hiring.
               </p>
@@ -190,10 +190,10 @@ const Page = () => {
 
             {/* Card 3 */}
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟨 For Policy & Ecosystems
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 Building regional, equitable, intelligent talent networks? Let’s
                 align intentions.
               </p>
@@ -236,14 +236,14 @@ const Page = () => {
         after:transform after:scale-x-0 after:origin-left
         after:transition-transform after:duration-300
         group-hover:after:scale-x-100
-        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] font-['Inter']"
                   >
                     connect@remotecto.in
                   </a>
                 </div>
 
                 <div className="transform transition-all duration-300 hover:scale-105">
-                  <strong className="block text-[#061BB0] text-2xl lg:text-3xl mb-2">
+                  <strong className="block text-[#061BB0] text-2xl lg:text-3xl mb-2 font-['Inter']">
                     Our Location
                   </strong>
                   <p
@@ -253,7 +253,7 @@ const Page = () => {
         after:transform after:scale-x-0 after:origin-left
         after:transition-transform after:duration-300
         group-hover:after:scale-x-100
-        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+        hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] font-['Inter']"
                   >
                     <span>Ahmedabad, </span>
                     <span className="flex items-center">
@@ -297,7 +297,7 @@ const Page = () => {
                   </div>
 
                   {/* Email and Phone Fields */}
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 font-['Inter']">
                     <div>
                       <label className="sr-only" htmlFor="email">
                         Email
@@ -371,7 +371,7 @@ const Page = () => {
                       hover:scale-105 hover:bg-blue-700
                       shadow-[0_0_15px_rgba(59,130,246,0.2)]
                       hover:shadow-[0_0_25px_rgba(59,130,246,0.4)]
-                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-['Inter']"
                     >
                       Send Enquiry
                     </button>

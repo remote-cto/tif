@@ -14,17 +14,17 @@ const Page = () => {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
             {/* Text Content */}
             <div className="flex-1 space-y-6">
-              <p className="text-xl text-slate-700 leading-relaxed">
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
                 Every individual emits signals — patterns of skill, pace, and
                 potential. Most systems miss them.
               </p>
-              <p className="text-xl text-slate-700 leading-relaxed">
-                At <span className="font-bold text-blue-600">XWORKS</span>,
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
+                At <span className="font-bold text-blue-600 font-['Inter']">XWORKS</span>,
                 readiness is not a score. It’s a multi-dimensional alignment — of
                 cognition, adaptability, and industry signal resonance. We don’t
                 just measure talent. We tune into it.
               </p>
-              <p className="text-xl text-slate-700 leading-relaxed">
+              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
                 Behind the radar lies a proprietary readiness engine — trained on
                 future-of-work indicators, calibrated with employer thresholds,
                 and constantly learning from behavioral flux. What you see is just
@@ -47,30 +47,30 @@ const Page = () => {
           {/* Section Cards */}
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟦 Signal Mapping
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 We capture micro-patterns often lost in traditional assessments —
                 to uncover latent potential.
               </p>
             </div>
 
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟦 Alignment Engine
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 Our readiness model adapts to evolving industry thresholds — not
                 yesterday’s benchmarks.
               </p>
             </div>
 
             <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3">
+              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
                 🟦 Beyond Scores
               </h3>
-              <p className="text-slate-700">
+              <p className="text-slate-700 font-['Inter']">
                 Readiness is not just measured. It’s interpreted, calibrated, and
                 forecasted — in real-time.
               </p>
