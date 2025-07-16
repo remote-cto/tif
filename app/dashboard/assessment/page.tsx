@@ -1,7 +1,7 @@
 //app/dashboard/assessment/page.tsx
 "use client"
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Clock, Brain, Code, Cloud, GitBranch, Lightbulb, Calculator, FolderOpen, BarChart3, Radar } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Brain, Code, Cloud, GitBranch, Lightbulb, Calculator, FolderOpen } from 'lucide-react';
 
 // Types
 interface Question {
@@ -33,7 +33,6 @@ interface AssessmentState {
   answers: { [key: string]: number };
   topicScores: { [key: string]: TopicScore };
   isCompleted: boolean;
-  currentStreak: number;
   timeStarted: number;
 }
 
@@ -140,12 +139,10 @@ const AssessmentPage: React.FC = () => {
     answers: {},
     topicScores: {},
     isCompleted: false,
-    currentStreak: 0,
     timeStarted: Date.now()
   });
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
@@ -157,12 +154,9 @@ const AssessmentPage: React.FC = () => {
   }, [state.timeStarted]);
 
   const currentQuestion = state.questions[state.currentQuestion];
-  const progress = ((state.currentQuestion + 1) / state.questions.length) * 100;
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (!showResult) {
-      setSelectedAnswer(answerIndex);
-    }
+    setSelectedAnswer(answerIndex);
   };
 
   const calculateTopicScore = (topic: string, answers: { [key: string]: number }): number => {
@@ -216,38 +210,28 @@ const AssessmentPage: React.FC = () => {
     if (selectedAnswer === null) return;
 
     const newAnswers = { ...state.answers, [currentQuestion.id]: selectedAnswer };
-    const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
-    const newStreak = isCorrect ? state.currentStreak + 1 : 0;
 
-    setShowResult(true);
+    if (state.currentQuestion < state.questions.length - 1) {
+      setState(prev => ({
+        ...prev,
+        currentQuestion: prev.currentQuestion + 1,
+        answers: newAnswers
+      }));
+      setSelectedAnswer(null);
+    } else {
+      // Calculate final scores
+      const finalTopicScores: { [key: string]: TopicScore } = {};
+      Object.keys(topicWeights).forEach(topic => {
+        finalTopicScores[topic] = calculateDetailedTopicScore(topic, newAnswers);
+      });
 
-    setTimeout(() => {
-      if (state.currentQuestion < state.questions.length - 1) {
-        setState(prev => ({
-          ...prev,
-          currentQuestion: prev.currentQuestion + 1,
-          answers: newAnswers,
-          currentStreak: newStreak
-        }));
-        setSelectedAnswer(null);
-        setShowResult(false);
-      } else {
-        // Calculate final scores
-        const finalTopicScores: { [key: string]: TopicScore } = {};
-        Object.keys(topicWeights).forEach(topic => {
-          finalTopicScores[topic] = calculateDetailedTopicScore(topic, newAnswers);
-        });
-
-        setState(prev => ({
-          ...prev,
-          answers: newAnswers,
-          topicScores: finalTopicScores,
-          isCompleted: true,
-          currentStreak: newStreak
-        }));
-        setShowResult(false);
-      }
-    }, 2000);
+      setState(prev => ({
+        ...prev,
+        answers: newAnswers,
+        topicScores: finalTopicScores,
+        isCompleted: true
+      }));
+    }
   };
 
   const formatTime = (seconds: number): string => {
@@ -306,14 +290,10 @@ const AssessmentPage: React.FC = () => {
               <p className="text-gray-600">Here's your AI Industry Readiness Report</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white text-center">
                 <div className="text-3xl font-bold">{readinessScore.toFixed(1)}%</div>
-                <div className="text-green-100">Industry Readiness</div>
-              </div>
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center">
-                <div className="text-3xl font-bold">{state.questions.length}</div>
-                <div className="text-blue-100">Questions Completed</div>
+                <div className="text-green-100">Assessment Score</div>
               </div>
               <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white text-center">
                 <div className="text-3xl font-bold">{formatTime(timeElapsed)}</div>
@@ -425,20 +405,23 @@ const AssessmentPage: React.FC = () => {
                 <Clock className="w-5 h-5 mr-2" />
                 {formatTime(timeElapsed)}
               </div>
-              <div className="bg-gray-100 px-4 py-2 rounded-lg">
-                <span className="text-sm font-medium text-gray-700">
-                  {state.currentQuestion + 1} / {state.questions.length}
-                </span>
-              </div>
             </div>
           </div>
 
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
-            <div
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+          {/* Simple Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700">Progress</span>
+              <span className="text-sm font-medium text-gray-700">
+                {state.currentQuestion + 1} / {state.questions.length}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((state.currentQuestion + 1) / state.questions.length) * 100}%` }}
+              />
+            </div>
           </div>
 
           {/* Question Level Badge */}
@@ -465,15 +448,8 @@ const AssessmentPage: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => handleAnswerSelect(index)}
-                  disabled={showResult}
                   className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
-                    showResult
-                      ? index === currentQuestion.correctAnswer
-                        ? 'border-green-500 bg-green-50 text-green-800'
-                        : selectedAnswer === index
-                        ? 'border-red-500 bg-red-50 text-red-800'
-                        : 'border-gray-200 bg-gray-50 text-gray-600'
-                      : selectedAnswer === index
+                    selectedAnswer === index
                       ? 'border-blue-500 bg-blue-50 text-blue-800'
                       : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50'
                   }`}
@@ -483,39 +459,11 @@ const AssessmentPage: React.FC = () => {
                       {String.fromCharCode(65 + index)}
                     </span>
                     {option}
-                    {showResult && index === currentQuestion.correctAnswer && (
-                      <CheckCircle className="w-5 h-5 text-green-600 ml-auto" />
-                    )}
-                    {showResult && selectedAnswer === index && index !== currentQuestion.correctAnswer && (
-                      <XCircle className="w-5 h-5 text-red-600 ml-auto" />
-                    )}
                   </div>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Result Message */}
-          {showResult && (
-            <div className={`mb-6 p-4 rounded-xl ${
-              selectedAnswer === currentQuestion.correctAnswer
-                ? 'bg-green-50 border border-green-200'
-                : 'bg-red-50 border border-red-200'
-            }`}>
-              <div className="flex items-center">
-                {selectedAnswer === currentQuestion.correctAnswer ? (
-                  <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-red-600 mr-2" />
-                )}
-                <span className={`font-medium ${
-                  selectedAnswer === currentQuestion.correctAnswer ? 'text-green-800' : 'text-red-800'
-                }`}>
-                  {selectedAnswer === currentQuestion.correctAnswer ? 'Correct!' : 'Incorrect'}
-                </span>
-              </div>
-            </div>
-          )}
 
           {/* Next Button */}
           <div className="flex justify-end">
@@ -526,29 +474,6 @@ const AssessmentPage: React.FC = () => {
             >
               {state.currentQuestion === state.questions.length - 1 ? 'Finish Assessment' : 'Next Question'}
             </button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="bg-white rounded-2xl shadow-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Progress</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{state.currentQuestion + 1}</div>
-              <div className="text-sm text-gray-600">Questions</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{state.currentStreak}</div>
-              <div className="text-sm text-gray-600">Streak</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{currentQuestion.level}</div>
-              <div className="text-sm text-gray-600">Level</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{currentQuestion.topic}</div>
-              <div className="text-sm text-gray-600">Topic</div>
-            </div>
           </div>
         </div>
       </div>

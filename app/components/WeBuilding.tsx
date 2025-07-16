@@ -153,12 +153,9 @@ const WeBuilding = () => {
                       {item.features.map((feature, featureIndex) => (
                         <span
                           key={featureIndex}
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.bgGradient} border border-slate-200 transition-all duration-300 group-hover:border-opacity-50 hover:scale-105`}
-                          style={{
-                            animationDelay: `${featureIndex * 100}ms`,
-                          }}
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.bgGradient} border border-slate-200`}
                         >
-                          <CheckCircle className="w-3 h-3 mr-1 text-green-500 group-hover:animate-spin" />
+                          <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
                           {feature}
                         </span>
                       ))}

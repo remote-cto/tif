@@ -53,20 +53,19 @@ const CampusToCareer: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 ">
       <div className="container mx-auto px-6 lg:px-12 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-6">
               <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight font-['InterBold']">
-                From Campus to Career – Made Measurable
+                From Potential to Performance – Made Measurable
               </h1>
 
               <p className="text-lg text-slate-600 leading-relaxed max-w-lg font-['Inter']">
-                We assess skills, identify gaps, and deliver AI-powered
-                upskilling — so your students don't just graduate, they become
-                industry-ready.
+                We transform skill data into actionable insights and tailored
+                upskilling—powered by AI, driven by outcomes.
               </p>
             </div>
 
@@ -77,7 +76,6 @@ const CampusToCareer: React.FC = () => {
               ))}
             </div>
 
-           
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
                 variant="primary"
