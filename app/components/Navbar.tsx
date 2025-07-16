@@ -65,7 +65,7 @@ const Navbar = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
 
-              <Link
+              {/* <Link
                 href="/mappingtalent"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
@@ -75,7 +75,7 @@ const Navbar = () => {
               >
                 Mapping Talent
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
-              </Link>
+              </Link> */}
 
               <Link
                 href="/readiness"
@@ -89,7 +89,7 @@ const Navbar = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
 
-              <Link
+              {/* <Link
                 href="/capability"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled 
@@ -99,7 +99,7 @@ const Navbar = () => {
               >
                 Capability Building
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
-              </Link>
+              </Link> */}
               <Link
                 href="/access"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
@@ -173,13 +173,13 @@ const Navbar = () => {
               >
                 The Model
               </Link>
-              <Link
+              {/* <Link
                 href="/mappingtalent"
                 className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Mapping Talent
-              </Link>
+              </Link> */}
               <Link
                 href="/readiness"
                 className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
@@ -187,13 +187,13 @@ const Navbar = () => {
               >
                 Readiness
               </Link>
-              <Link
+              {/* <Link
                 href="/capability"
                 className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Capability Building
-              </Link>
+              </Link> */}
               <Link
                 href="/access"
                 className="text-lg text-slate-800 hover:text-slate-900 transition-colors hover:scale-110 transform duration-300 font-semibold"

@@ -125,48 +125,10 @@ const Page = () => {
               </div>
             </div>
 
-            {/* Impact section */}
-            <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-8 border border-emerald-200/50 mb-10">
-              <h4 className="text-xl font-bold text-emerald-700 mb-6 font-['Inter']">
-                This model enables:
-              </h4>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 mt-2"></div>
-                  <p className="text-slate-700 font-['Inter']">
-                    Institutions become{" "}
-                    <span className="font-bold text-emerald-700 font-['Inter']">AI-first talent hubs</span>
-                  </p>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 mt-2"></div>
-                  <p className="text-slate-700 font-['Inter']">
-                    Companies find{" "}
-                    <span className="font-bold text-emerald-700 font-['Inter']">signals beyond scores</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+           
 
-            {/* Enhanced blockquote */}
-            <div className="relative mb-10">
-              <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full shadow-sm"></div>
-              <blockquote className="pl-8 py-6 bg-gradient-to-r from-cyan-50/70 to-blue-50/70 rounded-2xl border-l-4 border-cyan-400 shadow-sm">
-                <p className="text-2xl text-slate-700 italic leading-relaxed mb-4 font-medium font-['Inter']">
-                  It's not a funnel. It's an ecosystem —
-                </p>
-                <p className="text-2xl text-slate-700 italic leading-relaxed font-medium font-['Inter']">
-                  and it's working quietly behind India's next wave of talent.
-                </p>
-              </blockquote>
-            </div>
+            
 
-            {/* Closing line with emphasis */}
-            <div className="text-center pt-8 border-t border-slate-200/50">
-              <p className="text-xl text-slate-600 font-semibold font-['Inter']">
-                This model is the foundation of every activation we run.
-              </p>
-            </div>
           </div>
 
           {/* Floating elements for visual interest */}
