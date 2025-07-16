@@ -15,7 +15,6 @@ const LandingPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-slate-900 overflow-hidden relative">
         {/* Hero Section with Video Background */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          
           {/* Background Video */}
           <video
             autoPlay
@@ -24,10 +23,7 @@ const LandingPage = () => {
             playsInline
             className="absolute top-0 left-0 w-full h-full object-cover z-0"
           >
-            <source
-              src="/video/bg.mp4"
-              type="video/mp4"
-            />
+            <source src="/video/bg.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 
@@ -39,23 +35,22 @@ const LandingPage = () => {
             <div className="max-w-5xl mx-auto mt-10">
               <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight px-2">
                 <span className="text-white drop-shadow-2xl mt-15">
-                  What if talent could
+                  XWORKS is building the
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent drop-shadow-lg">
-                  speak for itself?
+                  world’s first AI Talent Intelligence Ecosystem.
                 </span>
               </h1>
 
               <div className="mb-8 sm:mb-12">
-                <p className="text-lg sm:text-xl md:text-2xl text-white font-medium max-w-3xl mx-auto leading-relaxed px-4 mb-4 drop-shadow-lg">
-                  We built the system that listens.
-                </p>
                 <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 mb-4 drop-shadow-lg">
-                  XWORKS is building the world's first AI Talent Intelligence Ecosystem.
+                  XWORKS is building the world's first AI Talent Intelligence
+                  Ecosystem.
                 </p>
                 <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 drop-shadow-lg">
-                  Discover who's ready. Develop who's rising. Deploy who matters.
+                  Discover who's ready. Develop who's rising. Deploy who
+                  matters.
                 </p>
               </div>
 
