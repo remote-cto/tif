@@ -1,0 +1,57 @@
+import { NextRequest, NextResponse } from "next/server";
+import pool from "@/lib/database";
+
+export async function GET(req: NextRequest) {
+  try {
+    const query = `
+      SELECT 
+        q.id,
+        q.question,
+        q.option_a,
+        q.option_b,
+        q.option_c,
+        q.option_d,
+        q.correct_answer,
+        t.name AS topic,
+        s.name AS section,
+        l.name AS level,
+        t.industry_weight,
+        l.difficulty_weight
+      FROM questions q
+      JOIN topics t ON q.topic_id = t.id
+      JOIN sections s ON t.section_id = s.id
+      JOIN levels l ON q.level_id = l.id
+      WHERE q.is_active = TRUE
+      ORDER BY q.id;
+    `;
+
+    const result = await pool.query(query);
+
+    const formattedQuestions = result.rows.map((q: any) => {
+      const correctAnswerIndex = { A: 0, B: 1, C: 2, D: 3 }[
+        q.correct_answer as "A" | "B" | "C" | "D"
+      ];
+
+      return {
+        id: q.id.toString(),
+        topic: q.topic,
+        section: q.section,
+        level: q.level,
+        question: q.question,
+        options: [q.option_a, q.option_b, q.option_c, q.option_d],
+        correctAnswer: correctAnswerIndex,
+      };
+    });
+
+    return NextResponse.json(
+      { questions: formattedQuestions },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return NextResponse.json(
+      { error: "Failed to load questions" },
+      { status: 500 }
+    );
+  }
+}
