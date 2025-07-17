@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 
 interface Student {
@@ -6,7 +7,17 @@ interface Student {
   name: string;
   registration_number: string;
   email: string;
+  assessments?: AssessmentResult[];
 }
+
+interface AssessmentResult {
+  id: number;
+  score: number;
+  total_questions: number;
+  score_percent: number;
+  attempted_at: string;
+}
+
 
 interface Admin {
   college_id?: number;
@@ -25,7 +36,7 @@ const DeanDashboard: React.FC = () => {
       return;
     }
 
-    const fetchStudents = async () => {
+    const fetchStudentsWithResults = async () => {
       try {
         const res = await fetch(
           `/api/college-students?college_id=${admin.college_id}`
@@ -39,12 +50,12 @@ const DeanDashboard: React.FC = () => {
       }
     };
 
-    fetchStudents();
+    fetchStudentsWithResults();
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-slate-800 mb-6 text-center">
           🎓 Dean Dashboard
         </h1>
@@ -60,10 +71,12 @@ const DeanDashboard: React.FC = () => {
             No students found.
           </div>
         )}
+
         <div className="text-3xl font-bold text-slate-800 mb-6 text-center">
-          Students Information
+          Students Information & Results
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {students.map((s) => (
             <div
               key={s.id}
@@ -76,10 +89,40 @@ const DeanDashboard: React.FC = () => {
                 <span className="font-medium text-slate-600">Reg No:</span>{" "}
                 {s.registration_number}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 mb-3">
                 <span className="font-medium text-slate-600">Email:</span>{" "}
                 {s.email}
               </p>
+
+              {s.assessments && s.assessments.length > 0 ? (
+                <div className="mt-3">
+                  <p className="text-md font-semibold text-slate-700 mb-2">
+                    📝 Results:
+                  </p>
+                  <ul className="space-y-2">
+                    {s.assessments.map((a) => (
+                      <li
+                        key={a.id}
+                        className="text-sm text-slate-700 border p-2 rounded-md bg-slate-50"
+                      >
+                        <p>
+                          <strong>Score:</strong> {a.score}/{a.total_questions}
+                        </p>
+                        <p>
+                          <strong>Percent:</strong>{" "}
+                          {a.score_percent?.toFixed(2)}%
+                        </p>
+                        <p>
+                          <strong>Date:</strong>{" "}
+                          {new Date(a.attempted_at).toLocaleDateString()}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-gray-500 mt-2 text-sm">No results yet.</p>
+              )}
             </div>
           ))}
         </div>

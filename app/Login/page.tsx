@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../components/Footer";
 import NewHeader from "../components/NewHeader";
+import { getStudentData } from "@/utils/getStudentData";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -22,6 +23,18 @@ const LoginPage: React.FC = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+  const student = getStudentData(); // your helper from utils
+  const admin = sessionStorage.getItem("adminData");
+
+  if (student) {
+    router.push("/dashboard");
+  } else if (admin) {
+    router.push("/dean-dashboard");
+  }
+}, []);
+
 
   // Fetch colleges on mount
   useEffect(() => {

@@ -1,3 +1,5 @@
+
+//app/dashboard/assessment/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import {
@@ -12,6 +14,7 @@ import {
   Calculator,
   FolderOpen,
 } from "lucide-react";
+import { getStudentData } from "@/utils/getStudentData";
 
 interface Question {
   id: string;
@@ -97,6 +100,43 @@ const AssessmentPage: React.FC = () => {
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
+
+  useEffect(() => {
+  const saveResult = async () => {
+    const student = getStudentData();
+    if (!student) return;
+
+    const correctAnswers = Object.keys(state.answers).reduce((acc, key) => {
+      const question = state.questions.find((q) => q.id === key);
+      if (question && state.answers[key] === question.correctAnswer) {
+        acc += 1;
+      }
+      return acc;
+    }, 0);
+
+    const totalQuestions = state.questions.length;
+    const scorePercent = (correctAnswers / totalQuestions) * 100;
+
+    await fetch("/api/save-score", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        student_id: parseInt(student.id),
+        assessment_id: null, // or pass the actual ID if available
+        correct_answers: correctAnswers,
+        total_questions: totalQuestions,
+        score_percent: scorePercent,
+      }),
+    });
+  };
+
+  if (state.isCompleted) {
+    saveResult();
+  }
+}, [state.isCompleted]);
+
 
   useEffect(() => {
     fetch("/api/assessment")
