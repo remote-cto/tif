@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
         s.name AS section,
         l.name AS level,
         t.industry_weight,
-        l.difficulty_weight
+        l.difficulty_weight,
+        ROW_NUMBER() OVER (ORDER BY q.id) as row_num
       FROM questions q
       JOIN topics t ON q.topic_id = t.id
       JOIN sections s ON t.section_id = s.id
@@ -27,7 +28,10 @@ export async function GET(req: NextRequest) {
 
     const result = await pool.query(query);
 
-    const formattedQuestions = result.rows.map((q: any) => {
+    // Filter to get every other question (odd row numbers: 1, 3, 5, etc.)
+    const filteredRows = result.rows.filter((row: any) => row.row_num % 2 === 1);
+
+    const formattedQuestions = filteredRows.map((q: any) => {
       const correctAnswerIndex = { A: 0, B: 1, C: 2, D: 3 }[
         q.correct_answer as "A" | "B" | "C" | "D"
       ];
