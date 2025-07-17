@@ -1,4 +1,3 @@
-
 //app/dashboard/assessment/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
@@ -15,6 +14,7 @@ import {
   FolderOpen,
 } from "lucide-react";
 import { getStudentData } from "@/utils/getStudentData";
+import AssessmentResult from "../../components/AssessmentResult";
 
 interface Question {
   id: string;
@@ -102,41 +102,40 @@ const AssessmentPage: React.FC = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
-  const saveResult = async () => {
-    const student = getStudentData();
-    if (!student) return;
+    const saveResult = async () => {
+      const student = getStudentData();
+      if (!student) return;
 
-    const correctAnswers = Object.keys(state.answers).reduce((acc, key) => {
-      const question = state.questions.find((q) => q.id === key);
-      if (question && state.answers[key] === question.correctAnswer) {
-        acc += 1;
-      }
-      return acc;
-    }, 0);
+      const correctAnswers = Object.keys(state.answers).reduce((acc, key) => {
+        const question = state.questions.find((q) => q.id === key);
+        if (question && state.answers[key] === question.correctAnswer) {
+          acc += 1;
+        }
+        return acc;
+      }, 0);
 
-    const totalQuestions = state.questions.length;
-    const scorePercent = (correctAnswers / totalQuestions) * 100;
+      const totalQuestions = state.questions.length;
+      const scorePercent = (correctAnswers / totalQuestions) * 100;
 
-    await fetch("/api/save-score", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        student_id: parseInt(student.id),
-        assessment_id: null, // or pass the actual ID if available
-        correct_answers: correctAnswers,
-        total_questions: totalQuestions,
-        score_percent: scorePercent,
-      }),
-    });
-  };
+      await fetch("/api/save-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          student_id: parseInt(student.id),
+          assessment_id: null,
+          correct_answers: correctAnswers,
+          total_questions: totalQuestions,
+          score_percent: scorePercent,
+        }),
+      });
+    };
 
-  if (state.isCompleted) {
-    saveResult();
-  }
-}, [state.isCompleted]);
-
+    if (state.isCompleted) {
+      saveResult();
+    }
+  }, [state.isCompleted]);
 
   useEffect(() => {
     fetch("/api/assessment")
@@ -275,117 +274,80 @@ const AssessmentPage: React.FC = () => {
   };
 
   if (state.isCompleted) {
-    const score = getReadinessScore();
+    const student = getStudentData();
+    const readinessScore = getReadinessScore();
     const { strengths, gaps } = getStrengthsAndGaps();
+    
+    // Transform topicScores to match the template interface
+    const topicScoresForTemplate = Object.values(state.topicScores).map(topic => ({
+      topic: topic.topic,
+      score: topic.normalizedScore
+    }));
+
+    if (!student) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 text-lg">Student data not found. Please log in again.</p>
+            <button
+              onClick={() => window.location.href = "/login"}
+              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
+            >
+              Go to Login
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                <CheckCircle className="text-green-600 w-10 h-10" />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900">Assessment Complete!</h1>
-              <p className="text-gray-600">Here’s your AI Readiness Report</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-green-500 rounded-xl p-6 text-white text-center">
-                <div className="text-3xl font-bold">{score.toFixed(1)}%</div>
-                <div className="text-green-100">Readiness Score</div>
-              </div>
-              <div className="bg-purple-500 rounded-xl p-6 text-white text-center">
-                <div className="text-3xl font-bold">{formatTime(timeElapsed)}</div>
-                <div className="text-purple-100">Time Taken</div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Strengths */}
-              <div className="bg-green-50 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-green-800 mb-4 flex items-center">
-                  <CheckCircle className="mr-2 w-5 h-5" /> Strengths
-                </h3>
-                {strengths.length > 0 ? (
-                  strengths.map((topic, idx) => {
-                    const Icon = topicIcons[topic as TopicKey];
-                    return (
-                      <div key={idx} className="flex items-center bg-white p-3 rounded-lg">
-                        {Icon && <Icon className="text-green-600 w-5 h-5 mr-3" />}
-                        <span className="text-gray-700">{topic}</span>
-                        <span className="ml-auto text-green-600 font-semibold">
-                          {state.topicScores[topic]?.normalizedScore.toFixed(0)}%
-                        </span>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-green-700">Keep improving!</p>
-                )}
-              </div>
-
-              {/* Gaps */}
-              <div className="bg-red-50 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-red-800 mb-4 flex items-center">
-                  <XCircle className="mr-2 w-5 h-5" /> Areas to Improve
-                </h3>
-                {gaps.length > 0 ? (
-                  gaps.map((topic, idx) => {
-                    const Icon = topicIcons[topic as TopicKey];
-                    return (
-                      <div key={idx} className="flex items-center bg-white p-3 rounded-lg">
-                        {Icon && <Icon className="text-red-600 w-5 h-5 mr-3" />}
-                        <span className="text-gray-700">{topic}</span>
-                        <span className="ml-auto text-red-600 font-semibold">
-                          {state.topicScores[topic]?.normalizedScore.toFixed(0)}%
-                        </span>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-red-700">No major gaps identified.</p>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-8 bg-blue-50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-blue-800 mb-3">Recommendations</h3>
-              <div className="space-y-3">
-                {gaps.length > 0 ? (
-                  gaps.map((topic, idx) => (
-                    <div key={idx} className="bg-white p-4 rounded-lg">
-                      <div className="font-medium text-gray-900">{topic}</div>
-                      <div className="text-gray-600 text-sm mt-1">{getRecommendationText(topic)}</div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="bg-white p-4 rounded-lg">
-                    <div className="font-medium text-gray-900">Awesome work!</div>
-                    <div className="text-gray-600 text-sm mt-1">
-                      You’re performing well across all topics. Try advanced capstone projects!
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-8 flex justify-center">
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
-              >
-                Retake Assessment
-              </button>
-            </div>
-          </div>
-        </div>
+        <style jsx global>{`
+          .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          }
+          
+          .animate-fill {
+            animation: fillBar 1.5s ease-in-out;
+          }
+          
+          @keyframes fillBar {
+            from { width: 0%; }
+            to { width: var(--final-width); }
+          }
+        `}</style>
+        
+        <AssessmentResult
+          student={{
+            name: student.name,
+            email: student.email,
+            
+          }}
+          readiness={readinessScore}
+          topicScores={topicScoresForTemplate}
+          strengths={strengths}
+          gaps={gaps}
+          getRecommendationText={getRecommendationText}
+        />
+        
+       
       </div>
     );
   }
 
   if (state.questions.length === 0) {
-    return <div className="p-10 text-center text-lg text-gray-700">Loading questions...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-lg text-gray-700">Loading questions...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -469,7 +431,7 @@ const AssessmentPage: React.FC = () => {
             <button
               onClick={handleNextQuestion}
               disabled={selectedAnswer === null}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {state.currentQuestion === state.questions.length - 1
                 ? "Finish Assessment"
