@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Mail, Hash, GraduationCap, LogIn, Lock } from "lucide-react";
+import { Mail, Hash, GraduationCap, LogIn, Lock, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../components/Footer";
@@ -20,6 +20,7 @@ const LoginPage: React.FC = () => {
   const [collegeId, setCollegeId] = useState("");
   const [colleges, setColleges] = useState<{ id: string; name: string }[]>([]);
   const [loadingColleges, setLoadingColleges] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -140,6 +141,10 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
       <NewHeader />
@@ -220,10 +225,10 @@ const LoginPage: React.FC = () => {
                   {loginType === "student" ? <Hash /> : <Lock />}
                 </div>
                 <input
-                  type={loginType === "student" ? "text" : "password"}
+                  type={loginType === "student" ? "text" : (showPassword ? "text" : "password")}
                   value={passwordOrRegNo}
                   onChange={(e) => setPasswordOrRegNo(e.target.value)}
-                  className="w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+                  className="w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
                   placeholder={
                     loginType === "student"
                       ? "Enter registration number"
@@ -231,6 +236,15 @@ const LoginPage: React.FC = () => {
                   }
                   required
                 />
+                {loginType === "admin" && (
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-3 top-3 w-5 h-5 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -287,7 +301,7 @@ const LoginPage: React.FC = () => {
             {/* Registration link for students */}
             {loginType === "student" && (
               <div className="text-center mt-4 text-sm text-gray-600">
-                Don’t have an account?{" "}
+                Don't have an account?{" "}
                 <Link
                   href="/Register"
                   className="text-blue-600 hover:text-blue-500 font-medium"

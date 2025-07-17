@@ -18,12 +18,12 @@ const DashboardPage = () => {
 
   useEffect(() => {
     // Get student data from sessionStorage (set during login)
-    const storedStudentData = sessionStorage.getItem('studentData');
+    const storedStudentData = sessionStorage.getItem("studentData");
     if (storedStudentData) {
       setStudentData(JSON.parse(storedStudentData));
     } else {
       // If no student data, redirect to login
-      router.push('/login');
+      router.push("/login");
     }
     setLoading(false);
   }, [router]);
@@ -35,8 +35,8 @@ const DashboardPage = () => {
 
   const handleLogout = () => {
     // Clear session data and redirect to login
-    sessionStorage.removeItem('studentData');
-    router.push('/login');
+    sessionStorage.removeItem("studentData");
+    router.push("/Login");
   };
 
   if (loading) {
@@ -99,8 +99,12 @@ const DashboardPage = () => {
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <Hash className="h-5 w-5 text-gray-500" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Registration Number</p>
-                    <p className="text-sm text-gray-900">{studentData.registration_number}</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Registration Number
+                    </p>
+                    <p className="text-sm text-gray-900">
+                      {studentData.registration_number}
+                    </p>
                   </div>
                 </div>
 
@@ -109,7 +113,9 @@ const DashboardPage = () => {
                   <GraduationCap className="h-5 w-5 text-gray-500" />
                   <div>
                     <p className="text-sm font-medium text-gray-700">College</p>
-                    <p className="text-sm text-gray-900">{studentData.college_name}</p>
+                    <p className="text-sm text-gray-900">
+                      {studentData.college_name}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -124,7 +130,8 @@ const DashboardPage = () => {
                   Ready to Get Started?
                 </h3>
                 <p className="text-lg text-gray-600 mb-8">
-                  You've successfully logged in to XWORKS. Take your first assessment to begin your journey.
+                  You've successfully logged in to XWORKS. Take your first
+                  assessment to begin your journey.
                 </p>
 
                 {/* Start Assessment Button */}
@@ -135,25 +142,6 @@ const DashboardPage = () => {
                   <Rocket className="w-5 h-5" />
                   Start Your Assessment
                 </button>
-
-                {/* Additional Dashboard Stats/Info */}
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h4 className="text-lg font-semibold text-blue-900 mb-2">Assessments</h4>
-                    <p className="text-2xl font-bold text-blue-600">0</p>
-                    <p className="text-sm text-blue-700">Completed</p>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h4 className="text-lg font-semibold text-green-900 mb-2">Score</h4>
-                    <p className="text-2xl font-bold text-green-600">--</p>
-                    <p className="text-sm text-green-700">Average</p>
-                  </div>
-                  <div className="p-4 bg-purple-50 rounded-lg">
-                    <h4 className="text-lg font-semibold text-purple-900 mb-2">Rank</h4>
-                    <p className="text-2xl font-bold text-purple-600">--</p>
-                    <p className="text-sm text-purple-700">College Rank</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

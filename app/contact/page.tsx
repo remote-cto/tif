@@ -229,7 +229,7 @@ const Page = () => {
                     Email
                   </strong>
                   <a
-                    href="mailto:connect@remotecto.in"
+                    href="mailto:connect@xworks.live"
                     className="text-blue-600 text-xl relative group
         after:content-[''] after:absolute after:bottom-0 after:left-0
         after:w-full after:h-0.5 after:bg-blue-400
@@ -238,7 +238,7 @@ const Page = () => {
         group-hover:after:scale-x-100
         hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] font-['Inter']"
                   >
-                    connect@remotecto.in
+                    connect@xworks.live
                   </a>
                 </div>
 
@@ -255,15 +255,7 @@ const Page = () => {
         group-hover:after:scale-x-100
         hover:text-blue-800 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] font-['Inter']"
                   >
-                    <span>Ahmedabad, </span>
-                    <span className="flex items-center">
-                      India
-                      <img
-                        src="https://flagcdn.com/w40/in.png"
-                        alt="India flag"
-                        className="w-5 h-auto ml-2 mr-1"
-                      />
-                    </span>
+                    <span>10, Shivani, Nr IIMA, Ambavadi, Ahmedabad</span>
                   </p>
                 </div>
               </div>

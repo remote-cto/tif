@@ -69,18 +69,6 @@ const NewHeader = () => {
               </Link>
 
               <Link
-                href="/mappingtalent"
-                className={`relative transition-colors duration-300 group font-medium text-base px-3 py-2 rounded-lg hover:bg-slate-50/50 ${
-                  isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
-                }`}
-              >
-                Mapping Talent
-                <span className="absolute -bottom-1 left-3 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-[calc(100%-24px)] transition-all duration-300"></span>
-              </Link>
-
-              <Link
                 href="/readiness"
                 className={`relative transition-colors duration-300 group font-medium text-base px-3 py-2 rounded-lg hover:bg-slate-50/50 ${
                   isScrolled
@@ -89,18 +77,6 @@ const NewHeader = () => {
                 }`}
               >
                 Readiness
-                <span className="absolute -bottom-1 left-3 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-[calc(100%-24px)] transition-all duration-300"></span>
-              </Link>
-
-              <Link
-                href="/capability"
-                className={`relative transition-colors duration-300 group font-medium text-base px-3 py-2 rounded-lg hover:bg-slate-50/50 ${
-                  isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
-                }`}
-              >
-                Capability Building
                 <span className="absolute -bottom-1 left-3 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-[calc(100%-24px)] transition-all duration-300"></span>
               </Link>
 
@@ -171,13 +147,7 @@ const NewHeader = () => {
               >
                 The Model
               </Link>
-              <Link
-                href="/mappingtalent"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-105 transform duration-300 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Mapping Talent
-              </Link>
+
               <Link
                 href="/readiness"
                 className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-105 transform duration-300 font-medium"
@@ -185,13 +155,7 @@ const NewHeader = () => {
               >
                 Readiness
               </Link>
-              <Link
-                href="/capability"
-                className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-105 transform duration-300 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Capability Building
-              </Link>
+
               <Link
                 href="/access"
                 className="text-2xl text-slate-800 hover:text-slate-900 transition-colors hover:scale-105 transform duration-300 font-medium"
