@@ -8,19 +8,22 @@ const Page = () => {
   const cards = [
     {
       title: "Opportunity Layers",
-      description: "We don't match talent to jobs. We match potential to possibility — through role-AI fit modeling.",
+      description:
+        "We don't match talent to jobs. We match potential to possibility — through role-AI fit modeling.",
       icon: Layers,
       color: "from-blue-500 to-cyan-500",
     },
     {
       title: "Gateways, Not Walls",
-      description: "We open personalized access paths for learners, institutions, and employers based on authentic signal.",
+      description:
+        "We open personalized access paths for learners, institutions, and employers based on authentic signal.",
       icon: Lock,
       color: "from-purple-500 to-pink-500",
     },
     {
       title: "Dynamic Fit Graph",
-      description: "Access is earned through engagement, not just credentials — driven by live feedback and skill delta.",
+      description:
+        "Access is earned through engagement, not just credentials — driven by live feedback and skill delta.",
       icon: TrendingUp,
       color: "from-green-500 to-emerald-500",
     },
@@ -28,7 +31,7 @@ const Page = () => {
 
   return (
     <>
-    <Navbar />
+      <Navbar />
       <section className="pt-4 md:pt-14 bg-gradient-to-br from-slate-50 via-white to-green-50 font-['Inter']">
         {/* Hero Section */}
         <div className="relative py-16 px-6 md:px-16 lg:px-24">
@@ -87,8 +90,7 @@ const Page = () => {
           </div>
         </div>
       </section>
-              <Footer />
-
+      <Footer />
     </>
   );
 };
