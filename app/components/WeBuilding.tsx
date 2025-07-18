@@ -33,7 +33,7 @@ const WeBuilding = () => {
       icon: Network,
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-50 to-cyan-50",
-      features: ["Tech Hub Networks", "Talent Validation", "Real-world Prep"],
+      features: ["Tech Hub Networks", "Talent Validation"],
     },
     {
       id: 2,
@@ -43,11 +43,7 @@ const WeBuilding = () => {
       icon: Cpu,
       gradient: "from-purple-500 to-pink-500",
       bgGradient: "from-purple-50 to-pink-50",
-      features: [
-        "Micro-assessments",
-        "Behavioral Analysis",
-        "AI + Human Validation",
-      ],
+      features: ["Micro-assessments", "Behavioral Analysis"],
     },
     {
       id: 3,
@@ -57,11 +53,7 @@ const WeBuilding = () => {
       icon: Link,
       gradient: "from-green-500 to-teal-500",
       bgGradient: "from-green-50 to-teal-50",
-      features: [
-        "Direct Connections",
-        "Startup Partnerships",
-        "Global Opportunities",
-      ],
+      features: ["Direct Connections", "Startup Partnerships"],
     },
     {
       id: 4,
@@ -71,11 +63,7 @@ const WeBuilding = () => {
       icon: Database,
       gradient: "from-orange-500 to-red-500",
       bgGradient: "from-orange-50 to-red-50",
-      features: [
-        "Skill Pathways",
-        "Career Trajectories",
-        "Portfolio Validation",
-      ],
+      features: ["Skill Pathways", "Career Trajectories"],
     },
   ];
 

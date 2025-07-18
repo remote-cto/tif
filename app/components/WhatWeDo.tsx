@@ -109,8 +109,6 @@ const WhatWeDo = () => {
                   </React.Fragment>
                 ))}
               </div>
-
-              
             </div>
           </div>
         </div>

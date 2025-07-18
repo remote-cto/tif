@@ -75,21 +75,6 @@ const CampusToCareer: React.FC = () => {
                 <FeatureCard key={index} title={feature.title} />
               ))}
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button
-                variant="primary"
-                onClick={() => console.log("Schedule Demo")}
-              >
-                Schedule a Demo
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => console.log("Download Overview")}
-              >
-                Download Overview
-              </Button>
-            </div>
           </div>
 
           {/* Right Image */}

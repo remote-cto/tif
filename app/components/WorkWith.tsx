@@ -1,19 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
-import {
-  GraduationCap,
-  Building2,
-  Brain,
-  Handshake,
-} from 'lucide-react';
+import React from "react";
+import { GraduationCap, Building2, Brain, Handshake } from "lucide-react";
 
 const WorkWith: React.FC = () => {
   return (
     <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-20">
       <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight font-['InterBold']">
-          Who We Work With</h1>
+        <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight font-['InterBold']">
+          Who We Work With
+        </h1>
 
         {/* Two Cards per Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -49,33 +45,44 @@ const WorkWith: React.FC = () => {
 
         {/* Footer Quote */}
         <div className="bg-white p-6 rounded-xl shadow-sm max-w-3xl mx-auto text-center">
-          <h3 className="text-lg md:text-2xl  text-indigo-700 mb-4 font-['Inter']">A Vision Beyond Logos</h3>
+          <h3 className="text-lg md:text-2xl  text-indigo-700 mb-4 font-['Inter']">
+            A Vision Beyond Logos
+          </h3>
           <p className="text-gray-700 text-base  mb-2 font-['Inter']">
-            We don’t just work with clients — we collaborate with <strong>educators</strong>, <strong>business</strong>, and <strong>ecosystem leaders</strong> who believe in transforming talent from the inside out.
+            We don’t just work with clients — we collaborate with{" "}
+            <strong>educators</strong>, <strong>business</strong>, and{" "}
+            <strong>ecosystem leaders</strong> who believe in transforming
+            talent from the inside out.
           </p>
-          <p className="text-gray-500 text-base italic">
-            We don’t advertise our collaborators. They become evident by their results.
-          </p>
+          
         </div>
       </div>
     </div>
   );
 };
 
-const Card: React.FC<{ icon: React.ReactNode; title: string; description: string }> = ({
-  icon,
-  title,
-  description,
-}) => (
+const Card: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}> = ({ icon, title, description }) => (
   <div className="bg-white shadow-sm rounded-xl p-6 text-left">
-    <div className="flex items-center gap-2 mb-2 font-semibold font-['Inter']">{icon}{title}</div>
-    <p className="text-gray-600 text-sm">{description}</p>
+    <div className="flex items-center gap-2 mb-2 font-semibold font-['Inter']">
+      {icon}
+      {title}
+    </div>
+    <p className="text-gray-600 text-sm font-['Inter']">{description}</p>
   </div>
 );
 
-const StatBox: React.FC<{ number: string; label: string }> = ({ number, label }) => (
+const StatBox: React.FC<{ number: string; label: string }> = ({
+  number,
+  label,
+}) => (
   <div className="bg-white p-6 rounded-xl shadow-sm text-center">
-    <div className="text-2xl font-bold text-indigo-700 font-['Inter']">{number}</div>
+    <div className="text-2xl font-bold text-indigo-700 font-['Inter']">
+      {number}
+    </div>
     <div className="text-gray-600 text-sm mt-1 font-['Inter']">{label}</div>
   </div>
 );

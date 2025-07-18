@@ -33,34 +33,36 @@ const LandingPage = () => {
           {/* Hero Content */}
           <div className="container mx-auto px-4 sm:px-6 text-center relative z-10 mt-10">
             <div className="max-w-5xl mx-auto mt-10">
-              <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight px-2">
+              <h1 className="text-xl sm:text-3xl md:text-7xl font-bold mb-6 leading-tight px-2">
                 <span className="text-white drop-shadow-2xl mt-15">
-                  XWORKS is building the
+                  WHAT IF TALENT COULD
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent drop-shadow-lg">
-                  world’s first AI Talent Intelligence Ecosystem.
+                  SPEAK FOR ITSELF ?
                 </span>
               </h1>
 
               <div className="mb-8 sm:mb-12">
                 <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 mb-4 drop-shadow-lg">
-                  XWORKS is building the world's first AI Talent Intelligence
+                  We built the system that listens.
+                </p>
+                <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 drop-shadow-lg">
+                  XWORKS is building the world’s first AI Talent Intelligence
                   Ecosystem.
                 </p>
                 <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 drop-shadow-lg">
-                  Discover who's ready. Develop who's rising. Deploy who
+                  Discover who’s ready. Develop who’s rising. Deploy who
                   matters.
                 </p>
               </div>
 
               <div className="flex justify-center items-center mb-8 sm:mb-6 px-4">
-                <Link
-                 href="/Login">
-                <button className="group bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-semibold text-base sm:text-lg md:text-xl hover:shadow-2xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center hover:from-emerald-600 hover:to-cyan-600 active:scale-95 justify-center border-2 border-white/20 backdrop-blur-sm">
-                  Start Your Journey
-                  <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
-                </button>
+                <Link href="/Login">
+                  <button className="group bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-semibold text-base sm:text-lg md:text-xl hover:shadow-2xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center hover:from-emerald-600 hover:to-cyan-600 active:scale-95 justify-center border-2 border-white/20 backdrop-blur-sm">
+                    Start Your Journey
+                    <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </Link>
               </div>
 
