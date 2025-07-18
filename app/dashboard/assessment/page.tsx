@@ -77,7 +77,10 @@ const difficultyWeights: Record<DifficultyKey, number> = {
   Advanced: 2.0,
 };
 
-const topicIcons: Record<TopicKey, React.ComponentType<{ className?: string }>> = {
+const topicIcons: Record<
+  TopicKey,
+  React.ComponentType<{ className?: string }>
+> = {
   Python: Code,
   "ML Concepts": Brain,
   "Cloud & Deployment": Cloud,
@@ -101,41 +104,71 @@ const AssessmentPage: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
-  useEffect(() => {
-    const saveResult = async () => {
-      const student = getStudentData();
-      if (!student) return;
+ // Update to the existing AssessmentPage component
+// Replace the existing useEffect for saving results with this enhanced version:
 
-      const correctAnswers = Object.keys(state.answers).reduce((acc, key) => {
-        const question = state.questions.find((q) => q.id === key);
-        if (question && state.answers[key] === question.correctAnswer) {
-          acc += 1;
-        }
-        return acc;
-      }, 0);
+useEffect(() => {
+  const saveResult = async () => {
+    const student = getStudentData();
+    if (!student) return;
 
-      const totalQuestions = state.questions.length;
-      const scorePercent = (correctAnswers / totalQuestions) * 100;
-
-      await fetch("/api/save-score", {
+    try {
+      const response = await fetch("/api/save-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           student_id: parseInt(student.id),
-          assessment_id: null,
-          correct_answers: correctAnswers,
-          total_questions: totalQuestions,
-          score_percent: scorePercent,
+          questionnaire_id: null, // or get from props/state if you have it
+          answers: state.answers, // This contains question_id -> selected_option mapping
+          questions: state.questions.map(q => ({
+            id: q.id,
+            correctAnswer: q.correctAnswer,
+            topic: q.topic,
+            level: q.level
+          })),
+          time_started: state.timeStarted,
+          time_completed: Date.now()
         }),
       });
-    };
 
-    if (state.isCompleted) {
-      saveResult();
+      if (!response.ok) {
+        throw new Error('Failed to save assessment');
+      }
+
+      const result = await response.json();
+      console.log('Assessment saved successfully:', result);
+      
+      // Optionally store the assessment ID for future reference
+      if (result.assessment_id) {
+        localStorage.setItem('last_assessment_id', result.assessment_id.toString());
+      }
+      
+    } catch (error) {
+      console.error('Error saving assessment:', error);
+      // Optionally show error message to user
     }
-  }, [state.isCompleted]);
+  };
+
+  if (state.isCompleted) {
+    saveResult();
+  }
+}, [state.isCompleted, state.answers, state.questions, state.timeStarted]);
+
+
+const getDetailedResults = async (assessmentId: number) => {
+  try {
+    const response = await fetch(`/api/assessment-results/${assessmentId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch detailed results');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching detailed results:', error);
+    return null;
+  }
+};
 
   useEffect(() => {
     fetch("/api/assessment")
@@ -162,9 +195,14 @@ const AssessmentPage: React.FC = () => {
     setSelectedAnswer(index);
   };
 
-  const calculateTopicScore = (topic: string, answers: { [key: string]: number }) => {
+  const calculateTopicScore = (
+    topic: string,
+    answers: { [key: string]: number }
+  ) => {
     const topicQuestions = state.questions.filter((q) => q.topic === topic);
-    const correctAnswers = topicQuestions.filter((q) => answers[q.id] === q.correctAnswer);
+    const correctAnswers = topicQuestions.filter(
+      (q) => answers[q.id] === q.correctAnswer
+    );
     const levels = { Basic: 0, Intermediate: 0, Advanced: 0 };
 
     correctAnswers.forEach((q) => {
@@ -184,9 +222,14 @@ const AssessmentPage: React.FC = () => {
     return totalCorrect * levelAvg * topicWeight;
   };
 
-  const calculateDetailedTopicScore = (topic: string, answers: { [key: string]: number }): TopicScore => {
+  const calculateDetailedTopicScore = (
+    topic: string,
+    answers: { [key: string]: number }
+  ): TopicScore => {
     const topicQuestions = state.questions.filter((q) => q.topic === topic);
-    const correctAnswers = topicQuestions.filter((q) => answers[q.id] === q.correctAnswer);
+    const correctAnswers = topicQuestions.filter(
+      (q) => answers[q.id] === q.correctAnswer
+    );
     const levels = { Basic: 0, Intermediate: 0, Advanced: 0 };
 
     correctAnswers.forEach((q) => {
@@ -209,7 +252,10 @@ const AssessmentPage: React.FC = () => {
   const handleNextQuestion = () => {
     if (selectedAnswer === null) return;
 
-    const newAnswers = { ...state.answers, [currentQuestion.id]: selectedAnswer };
+    const newAnswers = {
+      ...state.answers,
+      [currentQuestion.id]: selectedAnswer,
+    };
 
     if (state.currentQuestion < state.questions.length - 1) {
       setState((prev) => ({
@@ -223,7 +269,10 @@ const AssessmentPage: React.FC = () => {
       const uniqueTopics = [...new Set(state.questions.map((q) => q.topic))];
 
       uniqueTopics.forEach((topic) => {
-        finalTopicScores[topic] = calculateDetailedTopicScore(topic, newAnswers);
+        finalTopicScores[topic] = calculateDetailedTopicScore(
+          topic,
+          newAnswers
+        );
       });
 
       setState((prev) => ({
@@ -242,7 +291,10 @@ const AssessmentPage: React.FC = () => {
   };
 
   const getReadinessScore = (): number => {
-    const totalScore = Object.values(state.topicScores).reduce((sum, t) => sum + t.score, 0);
+    const totalScore = Object.values(state.topicScores).reduce(
+      (sum, t) => sum + t.score,
+      0
+    );
     const maxPossible = state.questions.length * 2.0 * 1.5;
     return Math.min(100, (totalScore / maxPossible) * 100);
   };
@@ -268,7 +320,8 @@ const AssessmentPage: React.FC = () => {
       "ML Concepts": "Study supervised/unsupervised algorithms.",
       "Tools & Git": "Learn Git basics with real collaborative projects.",
       "AI Use Cases": "Explore real-world applications and case studies.",
-      "Modern AI Stack Awareness": "Understand tools like LangChain, Vector DBs, and inference APIs.",
+      "Modern AI Stack Awareness":
+        "Understand tools like LangChain, Vector DBs, and inference APIs.",
     };
     return map[topic] || "Practice and deepen understanding of this topic.";
   };
@@ -277,20 +330,24 @@ const AssessmentPage: React.FC = () => {
     const student = getStudentData();
     const readinessScore = getReadinessScore();
     const { strengths, gaps } = getStrengthsAndGaps();
-    
+
     // Transform topicScores to match the template interface
-    const topicScoresForTemplate = Object.values(state.topicScores).map(topic => ({
-      topic: topic.topic,
-      score: topic.normalizedScore
-    }));
+    const topicScoresForTemplate = Object.values(state.topicScores).map(
+      (topic) => ({
+        topic: topic.topic,
+        score: topic.normalizedScore,
+      })
+    );
 
     if (!student) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600 text-lg">Student data not found. Please log in again.</p>
+            <p className="text-red-600 text-lg">
+              Student data not found. Please log in again.
+            </p>
             <button
-              onClick={() => window.location.href = "/login"}
+              onClick={() => (window.location.href = "/login")}
               className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
             >
               Go to Login
@@ -310,22 +367,25 @@ const AssessmentPage: React.FC = () => {
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
           }
-          
+
           .animate-fill {
             animation: fillBar 1.5s ease-in-out;
           }
-          
+
           @keyframes fillBar {
-            from { width: 0%; }
-            to { width: var(--final-width); }
+            from {
+              width: 0%;
+            }
+            to {
+              width: var(--final-width);
+            }
           }
         `}</style>
-        
+
         <AssessmentResult
           student={{
             name: student.name,
             email: student.email,
-            
           }}
           readiness={readinessScore}
           topicScores={topicScoresForTemplate}
@@ -333,8 +393,6 @@ const AssessmentPage: React.FC = () => {
           gaps={gaps}
           getRecommendationText={getRecommendationText}
         />
-        
-       
       </div>
     );
   }
@@ -357,7 +415,9 @@ const AssessmentPage: React.FC = () => {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">AI Industry Readiness Assessment</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                AI Industry Readiness Assessment
+              </h1>
               <p className="text-gray-600">
                 {currentQuestion.section} Section • {currentQuestion.topic}
               </p>
@@ -380,7 +440,9 @@ const AssessmentPage: React.FC = () => {
               <div
                 className="h-2 bg-blue-600 rounded-full transition-all"
                 style={{
-                  width: `${((state.currentQuestion + 1) / state.questions.length) * 100}%`,
+                  width: `${
+                    ((state.currentQuestion + 1) / state.questions.length) * 100
+                  }%`,
                 }}
               />
             </div>
@@ -404,7 +466,9 @@ const AssessmentPage: React.FC = () => {
 
           {/* Question */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{currentQuestion.question}</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              {currentQuestion.question}
+            </h2>
             <div className="space-y-3">
               {currentQuestion.options.map((option, index) => (
                 <button

@@ -1,64 +1,89 @@
 // app/api/college-students/route.ts
-// app/api/college-students/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/database";
 
-export async function GET(req: NextRequest) {
-  const collegeId = req.nextUrl.searchParams.get("college_id");
+type Assessment = {
+  id: number | null;
+  score: number;
+  total_questions: number;
+  score_percent: number;
+  attempted_at: string;
+  total_score: number;
+  readiness_score: number;
+  status: string;
+};
 
-  if (!collegeId) {
-    return NextResponse.json({ error: "Missing college_id" }, { status: 400 });
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const college_id = searchParams.get("college_id");
+
+  if (!college_id) {
+    return NextResponse.json({ error: "College ID is required" }, { status: 400 });
   }
 
   try {
-    const query = `
+    // Fetch students with their assessment results
+    const result = await pool.query(
+      `
       SELECT 
-        s.id AS student_id,
+        s.id,
         s.name,
-        s.email,
         s.registration_number,
-        r.id AS result_id,
-        r.correct_answers,
-        r.total_questions,
-        r.score_percent,
-        r.created_at
+        s.email,
+        json_agg(
+          json_build_object(
+            'id', sa.id,
+            'score', COALESCE(
+              (SELECT COUNT(*) FROM student_answers ans 
+               WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true), 0
+            ),
+            'total_questions', COALESCE(
+              (SELECT COUNT(*) FROM student_answers ans 
+               WHERE ans.student_assessment_id = sa.id), 0
+            ),
+            'score_percent', CASE 
+              WHEN (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id) > 0 
+              THEN (
+                (SELECT COUNT(*) FROM student_answers ans 
+                 WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true) * 100.0 / 
+                (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id)
+              )
+              ELSE 0
+            END,
+            'attempted_at', sa.started_at,
+            'total_score', sa.total_score,
+            'readiness_score', sa.readiness_score,
+            'status', sa.status
+          )
+        ) FILTER (WHERE sa.id IS NOT NULL) AS assessments
       FROM students s
-      LEFT JOIN student_results r ON s.id = r.student_id
+      LEFT JOIN student_assessments sa ON s.id = sa.student_id
       WHERE s.college_id = $1
-      ORDER BY s.id, r.created_at DESC;
-    `;
+      GROUP BY s.id, s.name, s.registration_number, s.email
+      ORDER BY s.name;
+      `,
+      [college_id]
+    );
 
-    const { rows } = await pool.query(query, [collegeId]);
+    // Clean up the assessments array (remove null values)
+    const students = result.rows.map(student => ({
+      ...student,
+assessments: student.assessments
+  ? student.assessments.filter((assessment: Assessment) => assessment.id !== null)
+  : []
+    }));
 
-    // Group by student
-    const studentMap = new Map();
-
-    for (const row of rows) {
-      if (!studentMap.has(row.student_id)) {
-        studentMap.set(row.student_id, {
-          id: row.student_id,
-          name: row.name,
-          registration_number: row.registration_number,
-          email: row.email,
-          assessments: [],
-        });
-      }
-
-      if (row.result_id) {
-        studentMap.get(row.student_id).assessments.push({
-          id: row.result_id,
-          score: row.correct_answers,
-          total_questions: row.total_questions,
-          score_percent: row.score_percent,
-          attempted_at: row.created_at,
-        });
-      }
-    }
-
-    return NextResponse.json({ students: Array.from(studentMap.values()) });
+    return NextResponse.json({
+      success: true,
+      students: students,
+    });
   } catch (error) {
-    console.error("Error fetching students with results:", error);
-    return NextResponse.json({ error: "Failed to fetch students" }, { status: 500 });
+    console.error("Error fetching college students:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
