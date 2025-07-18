@@ -129,74 +129,81 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
+    
 
-      <section className="pt-24 bg-gradient-to-br from-slate-50 via-white to-yellow-50 font-['Inter']">
+      <section className=" bg-gradient-to-br from-slate-50 via-white to-yellow-50 font-['Inter']">
+          <Navbar />
         {/* Hero Section */}
-        <div className="relative py-16 px-6 md:px-16 lg:px-24">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            {/* Text Content */}
-            <div className="flex-1 space-y-6">
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
-                You’re here. That’s the first signal.
-              </p>
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
-                We don't cold-sell. We align deeply. If you’re looking to
-                activate talent at scale, accelerate ecosystem impact, or
-                architect future-ready skill networks — we’d love to hear your
-                signal.
-              </p>
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
-                No forms. No bots. Just a conversation. Because the future won’t
-                be built by funnels. It’ll be built by resonance.
-              </p>
-            </div>
-
-            {/* Right Image */}
-            <div className="flex-1">
-              <Image
-                src="/images/Readiness.jpg"
-                alt="Signal Contact Illustration"
-                width={600}
-                height={400}
-                className="rounded-xl shadow-md object-cover"
-              />
-            </div>
+        <div className="relative py-24 px-6 md:px-16 lg:px-24 overflow-hidden">
+          {/* Background Video */}
+          <div className="absolute inset-0 z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="/video/bgNew.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/40"></div>
           </div>
 
-          {/* Section Cards */}
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {/* Card 1 */}
-            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
-                🟨 For Institutions
-              </h3>
-              <p className="text-slate-700 font-['Inter']">
-                Looking to rewire placement models? Launch AI-first skill hubs?
-                Let’s co-create readiness.
+          {/* Content */}
+          <div className="relative z-10 max-w-5xl mx-auto">
+            {/* Main Text Content - Centered and Larger */}
+            <div className="text-center space-y-8 mb-20">
+              <p className="text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed font-['Inter'] font-light max-w-4xl mx-auto">
+                You're here. That's the first signal.
+              </p>
+              <p className="text-lg md:text-xl lg:text-2xl text-white/90 leading-relaxed font-['Inter'] font-light max-w-4xl mx-auto">
+                We don't cold-sell. We align deeply. If you're looking to
+                activate talent at scale, accelerate ecosystem impact, or
+                architect future-ready skill networks — we'd love to hear your
+                signal.
+              </p>
+              <p className="text-lg md:text-xl lg:text-2xl text-white/90 leading-relaxed font-['Inter'] font-light max-w-4xl mx-auto">
+                No forms. No bots. Just a conversation. Because the future won't
+                be built by funnels. It'll be built by resonance.
               </p>
             </div>
 
-            {/* Card 2 */}
-            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
-                🟨 For Business
-              </h3>
-              <p className="text-slate-700 font-['Inter']">
-                Tired of paper résumés and generic assessments? Let’s show you
-                signal-based hiring.
-              </p>
-            </div>
+            {/* Section Cards */}
+            <div className="grid gap-8 md:grid-cols-3">
+              {/* Card 1 */}
+              <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-1">
+                <h3 className="text-blue-700 font-semibold text-xl mb-4 font-['Inter']">
+                  🟨 For Institutions
+                </h3>
+                <p className="text-slate-700 font-['Inter'] leading-relaxed">
+                  Looking to rewire placement models? Launch AI-first skill
+                  hubs? Let's co-create readiness.
+                </p>
+              </div>
 
-            {/* Card 3 */}
-            <div className="bg-blue-50 p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-              <h3 className="text-blue-700 font-semibold text-xl mb-3 font-['Inter']">
-                🟨 For Policy & Ecosystems
-              </h3>
-              <p className="text-slate-700 font-['Inter']">
-                Building regional, equitable, intelligent talent networks? Let’s
-                align intentions.
-              </p>
+              {/* Card 2 */}
+              <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-1">
+                <h3 className="text-blue-700 font-semibold text-xl mb-4 font-['Inter']">
+                  🟨 For Business
+                </h3>
+                <p className="text-slate-700 font-['Inter'] leading-relaxed">
+                  Tired of paper résumés and generic assessments? Let's show you
+                  signal-based hiring.
+                </p>
+              </div>
+
+              {/* Card 3 */}
+              <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-1">
+                <h3 className="text-blue-700 font-semibold text-xl mb-4 font-['Inter']">
+                  🟨 For Policy & Ecosystems
+                </h3>
+                <p className="text-slate-700 font-['Inter'] leading-relaxed">
+                  Building regional, equitable, intelligent talent networks?
+                  Let's align intentions.
+                </p>
+              </div>
             </div>
           </div>
         </div>
