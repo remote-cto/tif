@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Mail, Hash, GraduationCap, LogIn, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Hash, GraduationCap, LogIn, Lock, Eye, EyeOff, Sparkles, User, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../components/Footer";
@@ -25,17 +25,19 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Focus states for enhanced interactivity
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
   useEffect(() => {
-  const student = getStudentData(); // your helper from utils
-  const admin = sessionStorage.getItem("adminData");
+    const student = getStudentData(); // your helper from utils
+    const admin = sessionStorage.getItem("adminData");
 
-  if (student) {
-    router.push("/dashboard");
-  } else if (admin) {
-    router.push("/dean-dashboard");
-  }
-}, []);
-
+    if (student) {
+      router.push("/dashboard");
+    } else if (admin) {
+      router.push("/dean-dashboard");
+    }
+  }, []);
 
   // Fetch colleges on mount
   useEffect(() => {
@@ -148,90 +150,111 @@ const LoginPage: React.FC = () => {
   return (
     <>
       <NewHeader />
-      <div className="min-h-screen bg-white py-2 px-4 sm:px-6 lg:px-8 pt-24">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-4">
-            <div className="mx-auto h-12 w-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-              <LogIn className="h-6 w-6 text-white" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-2 px-4 sm:px-6 lg:px-8 pt-24 relative overflow-hidden">
+        {/* Floating Elements for Visual Appeal */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        
+        <div className="max-w-md mx-auto relative z-10">
+          {/* Header Section */}
+          <div className="text-center mb-8 transform transition-all duration-700 ease-out">
+            <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg transform hover:scale-110 transition-transform duration-300 relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full animate-ping opacity-20"></div>
+              {loginType === "student" ? (
+                <User className="h-8 w-8 text-white relative z-10" />
+              ) : (
+                <Shield className="h-8 w-8 text-white relative z-10" />
+              )}
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {loginType === "student"
-                ? "Student Login"
-                : "College Admin Login"}
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3 transition-all duration-300">
+              {loginType === "student" ? "Student Portal" : "Admin Dashboard"}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-lg leading-relaxed">
               {loginType === "student"
-                ? "Access your XWORKS student account"
-                : "Access your Dean/College Admin dashboard"}
+                ? "Welcome back to your XWORKS journey ✨"
+                : "Manage your institution with ease 🎓"}
             </p>
           </div>
 
           {/* Toggle Login Type */}
-          <div className="flex justify-center mb-6">
-            <button
-              className={`px-4 py-2 rounded-l-lg border font-medium ${
-                loginType === "student"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setLoginType("student")}
-            >
-              Student
-            </button>
-            <button
-              className={`px-4 py-2 rounded-r-lg border font-medium ${
-                loginType === "admin"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setLoginType("admin")}
-            >
-              College Admin
-            </button>
+          <div className="flex justify-center mb-8">
+            <div className="bg-white/80 backdrop-blur-sm p-1 rounded-xl shadow-lg border border-white/20">
+              <button
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
+                  loginType === "student"
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                    : "bg-transparent text-gray-700 hover:bg-gray-50"
+                }`}
+                onClick={() => setLoginType("student")}
+              >
+                <User className="inline w-4 h-4 mr-2" />
+                Student
+              </button>
+              <button
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
+                  loginType === "admin"
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                    : "bg-transparent text-gray-700 hover:bg-gray-50"
+                }`}
+                onClick={() => setLoginType("admin")}
+              >
+                <Shield className="inline w-4 h-4 mr-2" />
+                Admin
+              </button>
+            </div>
           </div>
 
           {/* Form */}
           <form
-            onSubmit={
-              loginType === "student" ? handleStudentLogin : handleAdminLogin
-            }
-            className="bg-white rounded-xl shadow-lg border p-8 space-y-6"
+            onSubmit={loginType === "student" ? handleStudentLogin : handleAdminLogin}
+            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8 space-y-6 transform transition-all duration-500 hover:shadow-3xl"
           >
             {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Email Address
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+              <div className="relative group">
+                <Mail className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
+                  focusedField === 'email' ? 'text-blue-600' : 'text-gray-400'
+                }`} />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
-                  placeholder="Enter your email"
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
+                  className="w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 placeholder-gray-500"
+                  placeholder="Enter your email address"
                   required
                 />
+                <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                  focusedField === 'email' ? 'ring-2 ring-blue-500/20' : ''
+                }`}></div>
               </div>
             </div>
 
             {/* Password / Reg. No */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 {loginType === "student" ? "Registration Number" : "Password"}
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-3 w-5 h-5 text-gray-400">
+              <div className="relative group">
+                <div className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
+                  focusedField === 'password' ? 'text-blue-600' : 'text-gray-400'
+                }`}>
                   {loginType === "student" ? <Hash /> : <Lock />}
                 </div>
                 <input
                   type={loginType === "student" ? "text" : (showPassword ? "text" : "password")}
                   value={passwordOrRegNo}
                   onChange={(e) => setPasswordOrRegNo(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField(null)}
+                  className="w-full pl-12 pr-12 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 placeholder-gray-500"
                   placeholder={
                     loginType === "student"
-                      ? "Enter registration number"
+                      ? "Enter your registration number"
                       : "Enter your password"
                   }
                   required
@@ -240,33 +263,38 @@ const LoginPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-3 w-5 h-5 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    className="absolute right-4 top-4 w-5 h-5 text-gray-400 hover:text-blue-600 focus:outline-none transition-all duration-300 transform hover:scale-110"
                   >
                     {showPassword ? <EyeOff /> : <Eye />}
                   </button>
                 )}
+                <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                  focusedField === 'password' ? 'ring-2 ring-blue-500/20' : ''
+                }`}></div>
               </div>
             </div>
 
             {/* College Dropdown (only for student) */}
             {loginType === "student" && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   College
                 </label>
-                <div className="relative">
-                  <GraduationCap className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <div className="relative group">
+                  <GraduationCap className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
+                    focusedField === 'college' ? 'text-blue-600' : 'text-gray-400'
+                  }`} />
                   <select
                     value={collegeId}
                     onChange={(e) => setCollegeId(e.target.value)}
-                    className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+                    onFocus={() => setFocusedField('college')}
+                    onBlur={() => setFocusedField(null)}
+                    className="w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 appearance-none cursor-pointer"
                     disabled={loadingColleges}
                     required
                   >
                     <option value="">
-                      {loadingColleges
-                        ? "Loading colleges..."
-                        : "Select your college"}
+                      {loadingColleges ? "Loading colleges..." : "Select your college"}
                     </option>
                     {colleges.map((college) => (
                       <option key={college.id} value={college.id}>
@@ -274,39 +302,60 @@ const LoginPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                  <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                    focusedField === 'college' ? 'ring-2 ring-blue-500/20' : ''
+                  }`}></div>
                 </div>
               </div>
             )}
 
             {/* Error */}
-            {error && <p className="text-red-600 text-sm">{error}</p>}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 animate-shake">
+                <p className="text-red-600 text-sm font-medium">{error}</p>
+              </div>
+            )}
 
             {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 px-4 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/30 relative overflow-hidden ${
                 loading
                   ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
               }`}
             >
-              {loading
-                ? "Logging in..."
-                : loginType === "student"
-                ? "Login as Student"
-                : "Login as Admin"}
+              {loading && (
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600">
+                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              )}
+              <span className="relative z-10 flex items-center justify-center">
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                    Logging in...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-5 h-5 mr-2" />
+                    {loginType === "student" ? "Access Student Portal" : "Access Admin Dashboard"}
+                  </>
+                )}
+              </span>
             </button>
 
             {/* Registration link for students */}
             {loginType === "student" && (
-              <div className="text-center mt-4 text-sm text-gray-600">
-                Don't have an account?{" "}
+              <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                <p className="text-gray-600 mb-2">New to XWORKS?</p>
                 <Link
                   href="/Register"
-                  className="text-blue-600 hover:text-blue-500 font-medium"
+                  className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold transition-all duration-300 transform hover:scale-105"
                 >
-                  Register here
+                  <Sparkles className="w-4 h-4 mr-1" />
+                  Create your account
                 </Link>
               </div>
             )}
@@ -314,6 +363,45 @@ const LoginPage: React.FC = () => {
         </div>
         <Footer />
       </div>
+
+      <style jsx global>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+        
+        .backdrop-blur-sm {
+          backdrop-filter: blur(8px);
+        }
+        
+        .shadow-3xl {
+          box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Custom scrollbar for select dropdown */
+        select::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        select::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        
+        select::-webkit-scrollbar-thumb {
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          border-radius: 10px;
+        }
+        
+        select::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+      `}</style>
     </>
   );
 };

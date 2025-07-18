@@ -4,10 +4,12 @@ import pool from "@/lib/database";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const assessmentId = parseInt(params.id);
+    // Await the params since they're now a Promise in Next.js 15+
+    const resolvedParams = await params;
+    const assessmentId = parseInt(resolvedParams.id);
     
     if (!assessmentId) {
       return NextResponse.json({ error: "Invalid assessment ID" }, { status: 400 });
