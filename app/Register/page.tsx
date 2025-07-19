@@ -279,7 +279,7 @@ const StudentRegistration: React.FC = () => {
 
             <div className="space-y-4">
               <Link
-                href="/login"
+                href="/Login"
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl inline-block"
               >
                 Go to Login
@@ -673,7 +673,7 @@ const StudentRegistration: React.FC = () => {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href="/Login"
                 className="text-blue-600 hover:text-blue-500 font-medium transition-colors"
               >
                 Sign in here

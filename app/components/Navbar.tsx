@@ -46,9 +46,7 @@ const Navbar = () => {
               <Link
                 href="/"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled
-                    ? "text-black"
-                    : "text-white"
+                  isScrolled ? "text-black" : "text-white"
                 }`}
               >
                 Home
@@ -58,9 +56,7 @@ const Navbar = () => {
               <Link
                 href="/model"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled
-                     ? "text-black"
-                    : "text-white"
+                  isScrolled ? "text-black" : "text-white"
                 }`}
               >
                 The Model
@@ -82,9 +78,7 @@ const Navbar = () => {
               <Link
                 href="/readiness"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled
-                    ? "text-black"
-                    : "text-white"
+                  isScrolled ? "text-black" : "text-white"
                 }`}
               >
                 Readiness
@@ -105,9 +99,7 @@ const Navbar = () => {
               <Link
                 href="/access"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled
-                     ? "text-black"
-                    : "text-white"
+                  isScrolled ? "text-black" : "text-white"
                 }`}
               >
                 Access
@@ -116,9 +108,7 @@ const Navbar = () => {
               <Link
                 href="/contact"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled
-                     ? "text-black"
-                    : "text-white"
+                  isScrolled ? "text-black" : "text-white"
                 }`}
               >
                 Let's Talk
@@ -126,8 +116,12 @@ const Navbar = () => {
               </Link>
 
               <div className="flex items-center space-x-3">
-                <Link href="/login">
-                  <button className="flex items-center border-2 border-slate-300 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-50 hover:border-blue-300 transition-all">
+                <Link href="/Login">
+                  <button
+                    className={`flex items-center border-2 border-slate-300  px-4 py-2 rounded-full font-semibold  transition-all  ${
+                      isScrolled ? "text-black" : "text-white"
+                    }`}
+                  >
                     <LogIn className="w-4 h-4 mr-2" />
                     Login
                   </button>

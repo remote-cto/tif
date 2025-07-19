@@ -23,7 +23,7 @@ const DashboardPage = () => {
       setStudentData(JSON.parse(storedStudentData));
     } else {
       // If no student data, redirect to login
-      router.push("/login");
+      router.push("/Login");
     }
     setLoading(false);
   }, [router]);
@@ -36,7 +36,7 @@ const DashboardPage = () => {
   const handleLogout = () => {
     // Clear session data and redirect to login
     sessionStorage.removeItem("studentData");
-    router.push("/login");
+    router.push("/Login");
   };
 
   if (loading) {
