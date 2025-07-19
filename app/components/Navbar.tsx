@@ -216,7 +216,7 @@ const Navbar = () => {
 
             {/* Login/Register Buttons */}
             <div className="flex flex-col items-center space-y-4 w-full max-w-sm mx-auto">
-              <Link href="/login" className="w-full">
+              <Link href="/Login" className="w-full">
                 <button className="flex items-center justify-center border-2 border-slate-300 text-slate-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-50 hover:border-blue-300 transition-all w-full">
                   <LogIn className="w-5 h-5 mr-2" />
                   Login

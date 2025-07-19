@@ -179,7 +179,7 @@ const DeanDashboard: React.FC = () => {
             <button
               onClick={() => {
                 sessionStorage.removeItem("adminData");
-                window.location.href = "/login";
+                window.location.href = "/Login";
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
