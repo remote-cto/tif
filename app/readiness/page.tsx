@@ -14,7 +14,7 @@ const Page = () => {
     },
     {
       title: "Alignment Engine",
-      description: "Our Readiness model adapts to evolving industry thresholds — not yesterday's benchmarks.",
+      description: "Our Readiness Model adapts to evolving industry thresholds — not yesterday's benchmarks.",
       icon: Zap,
       color: "from-purple-500 to-pink-500",
     },
