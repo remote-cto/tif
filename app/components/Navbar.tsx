@@ -15,7 +15,7 @@ const Navbar = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-    
+
     // Cleanup function
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -23,11 +23,13 @@ const Navbar = () => {
   return (
     <>
       {/* Navigation */}
-      <nav className={`fixed w-full z-40 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50' 
-          : 'bg-transparent'
-      }`}>
+      <nav
+        className={`fixed w-full z-40 transition-all duration-500 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50"
+            : "bg-transparent"
+        }`}
+      >
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 group cursor-pointer">
@@ -44,9 +46,9 @@ const Navbar = () => {
               <Link
                 href="/"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled 
-                    ? 'text-slate-800 hover:text-slate-900' 
-                    : 'text-slate-800 hover:text-slate-900'
+                  isScrolled
+                    ? "text-slate-800 hover:text-slate-900"
+                    : "text-slate-800 hover:text-slate-900"
                 }`}
               >
                 Home
@@ -56,9 +58,9 @@ const Navbar = () => {
               <Link
                 href="/model"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled 
-                    ? 'text-slate-800 hover:text-slate-900' 
-                    : 'text-slate-800 hover:text-slate-900'
+                  isScrolled
+                    ? "text-slate-800 hover:text-slate-900"
+                    : "text-slate-800 hover:text-slate-900"
                 }`}
               >
                 The Model
@@ -80,9 +82,9 @@ const Navbar = () => {
               <Link
                 href="/readiness"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled 
-                    ? 'text-slate-800 hover:text-slate-900' 
-                    : 'text-slate-800 hover:text-slate-900'
+                  isScrolled
+                    ? "text-slate-800 hover:text-slate-900"
+                    : "text-slate-800 hover:text-slate-900"
                 }`}
               >
                 Readiness
@@ -103,9 +105,9 @@ const Navbar = () => {
               <Link
                 href="/access"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled 
-                    ? 'text-slate-800 hover:text-slate-900' 
-                    : 'text-slate-800 hover:text-slate-900'
+                  isScrolled
+                    ? "text-slate-800 hover:text-slate-900"
+                    : "text-slate-800 hover:text-slate-900"
                 }`}
               >
                 Access
@@ -114,9 +116,9 @@ const Navbar = () => {
               <Link
                 href="/contact"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
-                  isScrolled 
-                    ? 'text-slate-800 hover:text-slate-900' 
-                    : 'text-slate-800 hover:text-slate-900'
+                  isScrolled
+                    ? "text-slate-800 hover:text-slate-900"
+                    : "text-slate-800 hover:text-slate-900"
                 }`}
               >
                 Let's Talk
@@ -131,7 +133,7 @@ const Navbar = () => {
                   </button>
                 </Link>
                 <Link href="/register">
-                <button className="flex items-center group bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-4 py-2  rounded-full font-semibold text-base  hover:shadow-2xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105  hover:from-emerald-600 hover:to-cyan-600 active:scale-95 justify-center border-2 border-white/20 backdrop-blur-sm">
+                  <button className="flex items-center group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2  rounded-full font-semibold text-base  hover:shadow-2xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105  hover:from-emerald-600 hover:to-cyan-600 active:scale-95 justify-center border-2 border-white/20 backdrop-blur-sm">
                     <UserPlus className="w-4 h-4 mr-2" />
                     Register
                   </button>
@@ -144,9 +146,17 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
-                <X className={`w-6 h-6 ${isScrolled ? 'text-slate-700' : 'text-slate-700'}`} />
+                <X
+                  className={`w-6 h-6 ${
+                    isScrolled ? "text-slate-700" : "text-slate-700"
+                  }`}
+                />
               ) : (
-                <Menu className={`w-6 h-6 ${isScrolled ? 'text-slate-700' : 'text-slate-700'}`} />
+                <Menu
+                  className={`w-6 h-6 ${
+                    isScrolled ? "text-slate-700" : "text-slate-700"
+                  }`}
+                />
               )}
             </button>
           </div>
@@ -219,7 +229,7 @@ const Navbar = () => {
                 </button>
               </Link>
               <Link href="/register" className="w-full">
-                <button className="flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold text-lg transform hover:scale-105 transition-all active:scale-95 w-full">
+                <button className="flex items-center justify-center border-2 border-slate-300 text-slate-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-50 hover:border-blue-300 transition-all w-full">
                   <UserPlus className="w-5 h-5 mr-2" />
                   Register
                 </button>
