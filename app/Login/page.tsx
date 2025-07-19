@@ -393,7 +393,7 @@ const LoginPage: React.FC = () => {
               <div className="text-center mt-6 pt-4 border-t border-gray-200">
                 <p className="text-gray-600 mb-2">New to XWORKS?</p>
                 <Link
-                  href="/register"
+                  href="/Register"
                   className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold transition-all duration-300 transform hover:scale-105"
                 >
                   <Sparkles className="w-4 h-4 mr-1" />
