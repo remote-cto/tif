@@ -56,7 +56,7 @@ const DeanDashboard: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
   const roleOptions = [
-    { value: "ai-developer", label: "AI Developer" },
+    { value: "ai-assessment", label: "AI Assessment" },
     
   ];
 
@@ -225,7 +225,7 @@ const DeanDashboard: React.FC = () => {
               onChange={handleRoleChange}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm bg-white"
             >
-              <option value="">Choose a role...</option>
+              <option value="">Choose an AI assessment</option>
               {roleOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
