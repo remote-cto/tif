@@ -47,8 +47,8 @@ const Navbar = () => {
                 href="/"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
+                    ? "text-black"
+                    : "text-white"
                 }`}
               >
                 Home
@@ -59,8 +59,8 @@ const Navbar = () => {
                 href="/model"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
+                     ? "text-black"
+                    : "text-white"
                 }`}
               >
                 The Model
@@ -83,8 +83,8 @@ const Navbar = () => {
                 href="/readiness"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
+                    ? "text-black"
+                    : "text-white"
                 }`}
               >
                 Readiness
@@ -106,8 +106,8 @@ const Navbar = () => {
                 href="/access"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
+                     ? "text-black"
+                    : "text-white"
                 }`}
               >
                 Access
@@ -117,8 +117,8 @@ const Navbar = () => {
                 href="/contact"
                 className={`relative transition-colors duration-300 group font-semibold text-base ${
                   isScrolled
-                    ? "text-slate-800 hover:text-slate-900"
-                    : "text-slate-800 hover:text-slate-900"
+                     ? "text-black"
+                    : "text-white"
                 }`}
               >
                 Let's Talk
@@ -127,7 +127,7 @@ const Navbar = () => {
 
               <div className="flex items-center space-x-3">
                 <Link href="/login">
-                  <button className="flex items-center border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-full font-semibold hover:bg-blue-50 hover:border-blue-300 transition-all">
+                  <button className="flex items-center border-2 border-slate-300 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-50 hover:border-blue-300 transition-all">
                     <LogIn className="w-4 h-4 mr-2" />
                     Login
                   </button>
