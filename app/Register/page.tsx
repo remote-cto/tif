@@ -268,7 +268,7 @@ const StudentRegistration: React.FC = () => {
 
             <div className="space-y-4">
               <Link
-                href="/Login"
+                href="/login"
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors inline-block"
               >
                 Go to Login
@@ -572,7 +572,7 @@ const StudentRegistration: React.FC = () => {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                href="/Login"
+                href="/login"
                 className="text-blue-600 hover:text-blue-500 font-medium transition-colors"
               >
                 Sign in here

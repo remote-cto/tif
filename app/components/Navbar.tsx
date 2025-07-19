@@ -124,13 +124,13 @@ const Navbar = () => {
               </Link>
 
               <div className="flex items-center space-x-3">
-                <Link href="/Login">
+                <Link href="/login">
                   <button className="flex items-center border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-full font-semibold hover:bg-blue-50 hover:border-blue-300 transition-all">
                     <LogIn className="w-4 h-4 mr-2" />
                     Login
                   </button>
                 </Link>
-                <Link href="/Register">
+                <Link href="/register">
                 <button className="flex items-center group bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-4 py-2  rounded-full font-semibold text-base  hover:shadow-2xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105  hover:from-emerald-600 hover:to-cyan-600 active:scale-95 justify-center border-2 border-white/20 backdrop-blur-sm">
                     <UserPlus className="w-4 h-4 mr-2" />
                     Register
@@ -212,13 +212,13 @@ const Navbar = () => {
 
             {/* Login/Register Buttons */}
             <div className="flex flex-col items-center space-y-4 w-full max-w-sm mx-auto">
-              <Link href="/Login" className="w-full">
+              <Link href="/login" className="w-full">
                 <button className="flex items-center justify-center border-2 border-slate-300 text-slate-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-50 hover:border-blue-300 transition-all w-full">
                   <LogIn className="w-5 h-5 mr-2" />
                   Login
                 </button>
               </Link>
-              <Link href="/Register" className="w-full">
+              <Link href="/register" className="w-full">
                 <button className="flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold text-lg transform hover:scale-105 transition-all active:scale-95 w-full">
                   <UserPlus className="w-5 h-5 mr-2" />
                   Register

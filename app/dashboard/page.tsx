@@ -36,7 +36,7 @@ const DashboardPage = () => {
   const handleLogout = () => {
     // Clear session data and redirect to login
     sessionStorage.removeItem("studentData");
-    router.push("/Login");
+    router.push("/login");
   };
 
   if (loading) {
