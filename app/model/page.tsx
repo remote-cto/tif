@@ -3,6 +3,7 @@ import React from "react";
 import { MapPin, CheckCircle, Target, Users } from "lucide-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import NewNavbar from "../components/NewNavbar";
 
 const Page = () => {
   const cards = [
@@ -28,7 +29,7 @@ const Page = () => {
 
   return (
     <section className="bg-white font-['Inter']">
-      <Navbar />
+      <NewNavbar />
 
       {/* === SECTION 1: Hero Section with Image === */}
       <section className="pt-4 md:pt-14 bg-gradient-to-br from-slate-50 via-white to-green-50">

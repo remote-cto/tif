@@ -3,6 +3,7 @@ import { Layers, Lock, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import NewNavbar from "../components/NewNavbar";
 
 const Page = () => {
   const cards = [
@@ -31,7 +32,7 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
+      <NewNavbar />
       <section className="pt-4 md:pt-14 bg-gradient-to-br from-slate-50 via-white to-green-50 font-['Inter']">
         {/* Hero Section */}
         <div className="relative py-16 px-6 md:px-16 lg:px-24">
