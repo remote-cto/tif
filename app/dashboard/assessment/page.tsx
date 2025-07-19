@@ -39,6 +39,29 @@ interface TopicScore {
   normalizedScore: number;
 }
 
+// Interface matching the AssessmentResult component's expected TopicScore
+interface AssessmentResultTopicScore {
+  topic_id: number;
+  topic_name: string;
+  correct_answers: number;
+  total_questions: number;
+  weighted_score: number;
+  normalized_score: number;
+  classification: string;
+}
+
+// Interface matching the AssessmentResult component's expected AssessmentResult
+interface AssessmentResultData {
+  id: number;
+  score: number;
+  total_questions: number;
+  score_percent: number;
+  attempted_at: string;
+  total_score?: number;
+  readiness_score?: number;
+  status?: string;
+}
+
 interface AssessmentState {
   currentQuestion: number;
   questions: Question[];
@@ -46,6 +69,13 @@ interface AssessmentState {
   topicScores: { [key: string]: TopicScore };
   isCompleted: boolean;
   timeStarted: number;
+}
+
+interface StudentData {
+  id: string;
+  name: string;
+  email: string;
+  registration_number?: string;
 }
 
 type TopicKey =
@@ -103,72 +133,87 @@ const AssessmentPage: React.FC = () => {
 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [assessmentId, setAssessmentId] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [student, setStudent] = useState<StudentData | null>(null);
 
- // Update to the existing AssessmentPage component
-// Replace the existing useEffect for saving results with this enhanced version:
+  // Initialize student data
+  useEffect(() => {
+    const studentData = getStudentData();
+    if (studentData) {
+      setStudent(studentData);
+    }
+  }, []);
 
-useEffect(() => {
-  const saveResult = async () => {
-    const student = getStudentData();
-    if (!student) return;
+  // Save assessment results
+  useEffect(() => {
+    const saveResult = async () => {
+      if (!student) return;
 
+      setIsSaving(true);
+      setSaveError(null);
+
+      try {
+        const response = await fetch("/api/save-score", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            student_id: parseInt(student.id),
+            questionnaire_id: null,
+            answers: state.answers,
+            questions: state.questions.map(q => ({
+              id: q.id,
+              correctAnswer: q.correctAnswer,
+              topic: q.topic,
+              level: q.level
+            })),
+            time_started: state.timeStarted,
+            time_completed: Date.now()
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save assessment');
+        }
+
+        const result = await response.json();
+        console.log('Assessment saved successfully:', result);
+        
+        // Store the actual assessment ID from the response
+        if (result.assessment_id) {
+          setAssessmentId(result.assessment_id);
+          localStorage.setItem('last_assessment_id', result.assessment_id.toString());
+        }
+        
+      } catch (error) {
+        console.error('Error saving assessment:', error);
+        setSaveError('Failed to save assessment. Please try again.');
+      } finally {
+        setIsSaving(false);
+      }
+    };
+
+    // Only save if completed and we don't have an ID yet and we're not already saving
+    if (state.isCompleted && !assessmentId && !isSaving && student) {
+      saveResult();
+    }
+  }, [state.isCompleted, state.answers, state.questions, state.timeStarted, assessmentId, isSaving, student]);
+
+  const getDetailedResults = async (assessmentId: number) => {
     try {
-      const response = await fetch("/api/save-score", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          student_id: parseInt(student.id),
-          questionnaire_id: null, // or get from props/state if you have it
-          answers: state.answers, // This contains question_id -> selected_option mapping
-          questions: state.questions.map(q => ({
-            id: q.id,
-            correctAnswer: q.correctAnswer,
-            topic: q.topic,
-            level: q.level
-          })),
-          time_started: state.timeStarted,
-          time_completed: Date.now()
-        }),
-      });
-
+      const response = await fetch(`/api/assessment-results/${assessmentId}`);
       if (!response.ok) {
-        throw new Error('Failed to save assessment');
+        throw new Error('Failed to fetch detailed results');
       }
-
-      const result = await response.json();
-      console.log('Assessment saved successfully:', result);
-      
-      // Optionally store the assessment ID for future reference
-      if (result.assessment_id) {
-        localStorage.setItem('last_assessment_id', result.assessment_id.toString());
-      }
-      
+      return await response.json();
     } catch (error) {
-      console.error('Error saving assessment:', error);
-      // Optionally show error message to user
+      console.error('Error fetching detailed results:', error);
+      return null;
     }
   };
-
-  if (state.isCompleted) {
-    saveResult();
-  }
-}, [state.isCompleted, state.answers, state.questions, state.timeStarted]);
-
-
-const getDetailedResults = async (assessmentId: number) => {
-  try {
-    const response = await fetch(`/api/assessment-results/${assessmentId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch detailed results');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching detailed results:', error);
-    return null;
-  }
-};
 
   useEffect(() => {
     fetch("/api/assessment")
@@ -326,36 +371,110 @@ const getDetailedResults = async (assessmentId: number) => {
     return map[topic] || "Practice and deepen understanding of this topic.";
   };
 
-  if (state.isCompleted) {
-    const student = getStudentData();
-    const readinessScore = getReadinessScore();
-    const { strengths, gaps } = getStrengthsAndGaps();
+  // Helper function to get classification based on normalized score
+  const getClassification = (normalizedScore: number): string => {
+    if (normalizedScore >= 80) return "Strength";
+    if (normalizedScore < 60) return "Gap";
+    return "Optional";
+  };
 
-    // Transform topicScores to match the template interface
-    const topicScoresForTemplate = Object.values(state.topicScores).map(
-      (topic) => ({
-        topic: topic.topic,
-        score: topic.normalizedScore,
+  // Loading state for student data
+  if (!student) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-lg text-gray-700">Loading student data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state while saving
+  if (state.isCompleted && (isSaving || (!assessmentId && !saveError))) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-lg text-gray-700">Saving your assessment and Generate your Report</p>
+          <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if save failed
+  if (state.isCompleted && saveError && !assessmentId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <XCircle className="w-16 h-16 mx-auto mb-2" />
+            <p className="text-lg font-semibold">Save Failed</p>
+          </div>
+          <p className="text-gray-600 mb-4">{saveError}</p>
+          <button
+            onClick={() => {
+              setSaveError(null);
+              // Trigger save retry by temporarily setting isCompleted to false then true
+              setState(prev => ({ ...prev, isCompleted: false }));
+              setTimeout(() => setState(prev => ({ ...prev, isCompleted: true })), 100);
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition mr-3"
+          >
+            Try Again
+          </button>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition"
+          >
+            Start Over
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show results if assessment is completed and saved successfully
+  if (state.isCompleted && assessmentId) {
+    const readinessScore = getReadinessScore();
+    const totalCorrectAnswers = Object.values(state.topicScores).reduce(
+      (sum, topic) => sum + topic.correct, 0
+    );
+    const scorePercent = (totalCorrectAnswers / state.questions.length) * 100;
+
+    // Transform topicScores to match the AssessmentResult component interface
+    const topicScoresForTemplate: AssessmentResultTopicScore[] = Object.values(state.topicScores).map(
+      (topic, index) => ({
+        topic_id: index + 1,
+        topic_name: topic.topic,
+        correct_answers: topic.correct,
+        total_questions: topic.total,
+        weighted_score: topic.score,
+        normalized_score: topic.normalizedScore,
+        classification: getClassification(topic.normalizedScore),
       })
     );
 
-    if (!student) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-red-600 text-lg">
-              Student data not found. Please log in again.
-            </p>
-            <button
-              onClick={() => (window.location.href = "/login")}
-              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
-            >
-              Go to Login
-            </button>
-          </div>
-        </div>
-      );
-    }
+    // Create assessment result data with REAL DYNAMIC ID
+    const assessmentData: AssessmentResultData = {
+      id: assessmentId,
+      score: totalCorrectAnswers,
+      total_questions: state.questions.length,
+      score_percent: scorePercent,
+      attempted_at: new Date(state.timeStarted).toISOString(),
+      total_score: Object.values(state.topicScores).reduce((sum, t) => sum + t.score, 0),
+      readiness_score: readinessScore,
+      status: "completed",
+    };
+
+    // Create student data matching the expected interface
+    const studentData = {
+      id: parseInt(student.id) || 1,
+      name: student.name,
+      email: student.email,
+      registration_number: student.registration_number || "N/A",
+    };
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
@@ -383,20 +502,16 @@ const getDetailedResults = async (assessmentId: number) => {
         `}</style>
 
         <AssessmentResult
-          student={{
-            name: student.name,
-            email: student.email,
-          }}
-          readiness={readinessScore}
+          student={studentData}
+          assessments={[assessmentData]}
           topicScores={topicScoresForTemplate}
-          strengths={strengths}
-          gaps={gaps}
           getRecommendationText={getRecommendationText}
         />
       </div>
     );
   }
 
+  // Loading state for questions
   if (state.questions.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
@@ -408,6 +523,7 @@ const getDetailedResults = async (assessmentId: number) => {
     );
   }
 
+  // Assessment in progress - show current question
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-4xl mx-auto">

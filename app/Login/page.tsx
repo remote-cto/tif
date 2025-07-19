@@ -1,9 +1,20 @@
-//app/Login/Page.tsx
+//app/login/Page.tsx
 
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Mail, Hash, GraduationCap, LogIn, Lock, Eye, EyeOff, Sparkles, User, Shield } from "lucide-react";
+import {
+  Mail,
+  Hash,
+  GraduationCap,
+  LogIn,
+  Lock,
+  Eye,
+  EyeOff,
+  Sparkles,
+  User,
+  Shield,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../components/Footer";
@@ -154,7 +165,7 @@ const LoginPage: React.FC = () => {
         {/* Floating Elements for Visual Appeal */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        
+
         <div className="max-w-md mx-auto relative z-10">
           {/* Header Section */}
           <div className="text-center mb-8 transform transition-all duration-700 ease-out">
@@ -206,7 +217,9 @@ const LoginPage: React.FC = () => {
 
           {/* Form */}
           <form
-            onSubmit={loginType === "student" ? handleStudentLogin : handleAdminLogin}
+            onSubmit={
+              loginType === "student" ? handleStudentLogin : handleAdminLogin
+            }
             className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8 space-y-6 transform transition-all duration-500 hover:shadow-3xl"
           >
             {/* Email */}
@@ -215,22 +228,27 @@ const LoginPage: React.FC = () => {
                 Email Address
               </label>
               <div className="relative group">
-                <Mail className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
-                  focusedField === 'email' ? 'text-blue-600' : 'text-gray-400'
-                }`} />
+                <Mail
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-300  ${
+                    focusedField === "email" ? "text-blue-600" : "black"
+                  }`}
+                />
+
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocusedField('email')}
+                  onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 placeholder-gray-500"
                   placeholder="Enter your email address"
                   required
                 />
-                <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
-                  focusedField === 'email' ? 'ring-2 ring-blue-500/20' : ''
-                }`}></div>
+                <div
+                  className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                    focusedField === "email" ? "ring-2 ring-blue-500/20" : ""
+                  }`}
+                ></div>
               </div>
             </div>
 
@@ -240,16 +258,26 @@ const LoginPage: React.FC = () => {
                 {loginType === "student" ? "Registration Number" : "Password"}
               </label>
               <div className="relative group">
-                <div className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
-                  focusedField === 'password' ? 'text-blue-600' : 'text-gray-400'
-                }`}>
+                <div
+                  className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
+                    focusedField === "password"
+                      ? "text-blue-600"
+                      : "text-gray-400"
+                  }`}
+                >
                   {loginType === "student" ? <Hash /> : <Lock />}
                 </div>
                 <input
-                  type={loginType === "student" ? "text" : (showPassword ? "text" : "password")}
+                  type={
+                    loginType === "student"
+                      ? "text"
+                      : showPassword
+                      ? "text"
+                      : "password"
+                  }
                   value={passwordOrRegNo}
                   onChange={(e) => setPasswordOrRegNo(e.target.value)}
-                  onFocus={() => setFocusedField('password')}
+                  onFocus={() => setFocusedField("password")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full pl-12 pr-12 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 placeholder-gray-500"
                   placeholder={
@@ -268,9 +296,11 @@ const LoginPage: React.FC = () => {
                     {showPassword ? <EyeOff /> : <Eye />}
                   </button>
                 )}
-                <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
-                  focusedField === 'password' ? 'ring-2 ring-blue-500/20' : ''
-                }`}></div>
+                <div
+                  className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                    focusedField === "password" ? "ring-2 ring-blue-500/20" : ""
+                  }`}
+                ></div>
               </div>
             </div>
 
@@ -281,20 +311,26 @@ const LoginPage: React.FC = () => {
                   College
                 </label>
                 <div className="relative group">
-                  <GraduationCap className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
-                    focusedField === 'college' ? 'text-blue-600' : 'text-gray-400'
-                  }`} />
+                  <GraduationCap
+                    className={`absolute left-4 top-4 w-5 h-5 transition-all duration-300 ${
+                      focusedField === "college"
+                        ? "text-blue-600"
+                        : "text-gray-400"
+                    }`}
+                  />
                   <select
                     value={collegeId}
                     onChange={(e) => setCollegeId(e.target.value)}
-                    onFocus={() => setFocusedField('college')}
+                    onFocus={() => setFocusedField("college")}
                     onBlur={() => setFocusedField(null)}
                     className="w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 border-gray-200 transition-all duration-300 bg-white/70 backdrop-blur-sm hover:bg-white/90 text-gray-900 appearance-none cursor-pointer"
                     disabled={loadingColleges}
                     required
                   >
                     <option value="">
-                      {loadingColleges ? "Loading colleges..." : "Select your college"}
+                      {loadingColleges
+                        ? "Loading colleges..."
+                        : "Select your college"}
                     </option>
                     {colleges.map((college) => (
                       <option key={college.id} value={college.id}>
@@ -302,9 +338,13 @@ const LoginPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
-                  <div className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
-                    focusedField === 'college' ? 'ring-2 ring-blue-500/20' : ''
-                  }`}></div>
+                  <div
+                    className={`absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none ${
+                      focusedField === "college"
+                        ? "ring-2 ring-blue-500/20"
+                        : ""
+                    }`}
+                  ></div>
                 </div>
               </div>
             )}
@@ -340,7 +380,9 @@ const LoginPage: React.FC = () => {
                 ) : (
                   <>
                     <LogIn className="w-5 h-5 mr-2" />
-                    {loginType === "student" ? "Access Student Portal" : "Access Admin Dashboard"}
+                    {loginType === "student"
+                      ? "Login"
+                      : "Access Admin Dashboard"}
                   </>
                 )}
               </span>
@@ -362,44 +404,51 @@ const LoginPage: React.FC = () => {
           </form>
         </div>
         <div className="mt-5">
-        <Footer />
+          <Footer />
         </div>
       </div>
 
       <style jsx global>{`
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          75% {
+            transform: translateX(5px);
+          }
         }
-        
+
         .animate-shake {
           animation: shake 0.5s ease-in-out;
         }
-        
+
         .backdrop-blur-sm {
           backdrop-filter: blur(8px);
         }
-        
+
         .shadow-3xl {
           box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
         }
-        
+
         /* Custom scrollbar for select dropdown */
         select::-webkit-scrollbar {
           width: 8px;
         }
-        
+
         select::-webkit-scrollbar-track {
           background: #f1f1f1;
           border-radius: 10px;
         }
-        
+
         select::-webkit-scrollbar-thumb {
           background: linear-gradient(135deg, #3b82f6, #8b5cf6);
           border-radius: 10px;
         }
-        
+
         select::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(135deg, #2563eb, #7c3aed);
         }
