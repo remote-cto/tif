@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         readiness_score,
         status
       )
-      VALUES ($1, $2, $3, $4, $5)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id;
     `;
 
