@@ -40,6 +40,9 @@ export async function POST(req: NextRequest) {
     const correctAnswers = questions.filter(q => answers[q.id] === q.correctAnswer).length;
     const scorePercent = (correctAnswers / totalQuestions) * 100;
 
+      // Calculate readiness score (you can adjust this logic based on your requirements)
+    const readinessScore = calculateReadinessScore(answers, questions);
+
     // Create student_assessment record (without questionnaire_id)
     const assessmentQuery = `
       INSERT INTO student_assessments (
@@ -47,6 +50,7 @@ export async function POST(req: NextRequest) {
         started_at, 
         completed_at, 
         total_score, 
+        readiness_score,
         status
       )
       VALUES ($1, $2, $3, $4, $5)
@@ -61,6 +65,7 @@ export async function POST(req: NextRequest) {
       startedAt,
       completedAt,
       scorePercent,
+      readinessScore,
       'completed'
     ]);
 
@@ -90,6 +95,44 @@ export async function POST(req: NextRequest) {
     });
 
     await Promise.all(answerInserts);
+
+
+
+    function calculateReadinessScore(answers: { [key: string]: number }, questions: Array<any>): number {
+  const topicWeights: { [key: string]: number } = {
+    'ML Concepts': 1.2,
+    'Python': 1.0,
+    'Cloud & Deployment': 1.5,
+    'Tools & Git': 1.1,
+    'AI Use Cases': 1.1,
+    'Projects': 0.9,
+    'Math': 0.8,
+    'Modern AI Stack Awareness': 1.5,
+  };
+
+  const difficultyWeights: { [key: string]: number } = {
+    'Basic': 1.0,
+    'Intermediate': 1.5,
+    'Advanced': 2.0,
+  };
+
+  let totalWeightedScore = 0;
+  let maxPossibleScore = 0;
+
+  questions.forEach(question => {
+    const isCorrect = answers[question.id] === question.correctAnswer;
+    const topicWeight = topicWeights[question.topic] || 1.0;
+    const difficultyWeight = difficultyWeights[question.level] || 1.0;
+    const questionWeight = topicWeight * difficultyWeight;
+
+    if (isCorrect) {
+      totalWeightedScore += questionWeight;
+    }
+    maxPossibleScore += questionWeight;
+  });
+
+  return Math.min(100, (totalWeightedScore / maxPossibleScore) * 100);
+}
 
 
  // 3. Calculate and store topic-wise scores
@@ -200,6 +243,7 @@ function calculateTopicScores(answers: { [key: string]: number }, questions: Arr
       success: true, 
       assessment_id: studentAssessmentId,
       total_score: scorePercent,
+      readiness_score: readinessScore,
       correct_answers: correctAnswers,
       total_questions: totalQuestions
     });
