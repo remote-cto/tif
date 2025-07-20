@@ -53,14 +53,13 @@ export async function POST(req: NextRequest) {
     const assessmentQuery = `
       INSERT INTO student_assessments (
         student_id, 
-        questionnaire_id, 
         started_at, 
         completed_at, 
         total_score, 
         readiness_score, 
         status
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id;
     `;
 
