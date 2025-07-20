@@ -10,7 +10,7 @@ interface StudentAnswer {
 
 interface SaveScoreRequest {
   student_id: number;
-  //questionnaire_id?: number;
+  questionnaire_id?: number;
   answers: { [key: string]: number }; // question_id -> selected_option
   questions: Array<{
     id: string;
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     
     const { 
       student_id, 
-      //questionnaire_id, 
+      questionnaire_id, 
       answers, 
       questions, 
       time_started, 
@@ -57,9 +57,10 @@ export async function POST(req: NextRequest) {
         completed_at, 
         total_score, 
         readiness_score, 
-        status
+        status,
+        questionnaire_id
       )
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id;
     `;
 
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
 
     const assessmentResult = await client.query(assessmentQuery, [
       student_id,
-      //questionnaire_id || null,
+      questionnaire_id || null,
       startedAt,
       completedAt,
       scorePercent,
