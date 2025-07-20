@@ -91,6 +91,103 @@ export async function POST(req: NextRequest) {
 
     await Promise.all(answerInserts);
 
+
+ // 3. Calculate and store topic-wise scores
+    const topicScores = calculateTopicScores(answers, questions);
+    
+    const topicInserts = Object.entries(topicScores).map(([topicName, scores]) => {
+      return client.query(`
+        INSERT INTO student_topic_scores (
+          student_assessment_id,
+          topic_id,
+          correct_answers,
+          total_questions,
+          basic_correct,
+          intermediate_correct,
+          advanced_correct,
+          weighted_score,
+          normalized_score,
+          classification
+        )
+        SELECT $1, t.id, $2, $3, $4, $5, $6, $7, $8, $9
+        FROM topics t 
+        WHERE t.name = $10
+      `, [
+        studentAssessmentId,
+        scores.correct,
+        scores.total,
+        scores.levels.Basic,
+        scores.levels.Intermediate,
+        scores.levels.Advanced,
+        scores.weightedScore,
+        scores.normalizedScore,
+        scores.classification,
+        topicName
+      ]);
+    });
+
+    await Promise.all(topicInserts);
+   
+
+function calculateTopicScores(answers: { [key: string]: number }, questions: Array<any>) {
+  const topicScores: { [key: string]: any } = {};
+
+  questions.forEach(question => {
+    const topic = question.topic;
+    const level = question.level;
+    const isCorrect = answers[question.id] === question.correctAnswer;
+
+    if (!topicScores[topic]) {
+      topicScores[topic] = {
+        correct: 0,
+        total: 0,
+        levels: { Basic: 0, Intermediate: 0, Advanced: 0 },
+        weightedScore: 0,
+        normalizedScore: 0,
+        classification: 'Optional'
+      };
+    }
+
+    topicScores[topic].total++;
+    if (isCorrect) {
+      topicScores[topic].correct++;
+      topicScores[topic].levels[level]++;
+    }
+  });
+
+  // Calculate weighted and normalized scores
+  Object.keys(topicScores).forEach(topic => {
+    const scores = topicScores[topic];
+    const accuracy = scores.correct / scores.total;
+    
+    // Calculate weighted score based on difficulty distribution
+    const difficultyWeights = { Basic: 1.0, Intermediate: 1.5, Advanced: 2.0 };
+    const avgDifficultyWeight = (
+      scores.levels.Basic * difficultyWeights.Basic +
+      scores.levels.Intermediate * difficultyWeights.Intermediate +
+      scores.levels.Advanced * difficultyWeights.Advanced
+    ) / (scores.levels.Basic + scores.levels.Intermediate + scores.levels.Advanced || 1);
+
+    scores.weightedScore = accuracy * avgDifficultyWeight * 100;
+    scores.normalizedScore = Math.min(100, scores.weightedScore);
+    
+    // Classify performance
+    if (scores.normalizedScore >= 75) {
+      scores.classification = 'Strength';
+    } else if (scores.normalizedScore < 50) {
+      scores.classification = 'Gap';
+    } else {
+      scores.classification = 'Optional';
+    }
+  });
+
+  return topicScores;
+}
+
+
+
+
+
     // Maintain the old student_results table for backward compatibility
     await client.query(`
       INSERT INTO student_results (student_id, assessment_id, correct_answers, total_questions, score_percent)
