@@ -98,8 +98,8 @@ const NewNavbar = () => {
                   <button
                     className={`flex items-center px-4 py-2 rounded-full font-semibold border-2 transition-all duration-300 ${
                       isScrolled 
-                        ? "text-black border-white/30 hover:bg-white/10 hover:border-white/50" 
-                        : "text-black border-white/30 hover:bg-white/10 hover:border-white/50"
+                        ? "text-black border-2 border-black px-4 py-2 rounded-full  hover:bg-white/10 hover:border-white/50" 
+                        : "text-black border-2 border-black px-4 py-2 rounded-full hover:bg-white/10 hover:border-white/50"
                     }`}
                   >
                     <LogIn className="w-4 h-4 mr-2" />
