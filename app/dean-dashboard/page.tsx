@@ -22,8 +22,8 @@ interface AssessmentResult {
   attempted_at: string;
   total_score?: number;
   readiness_score?: number;
-  foundation_score?: number;
-  industrial_score?: number;
+  //foundation_score?: number;
+  //industrial_score?: number;
   status?: string;
 }
 
@@ -350,44 +350,8 @@ const DeanDashboard: React.FC = () => {
                             <span className="text-gray-400">No data</span>
                           )}
                         </td>
-                        <td className="px-6 py-4">
-                          {student.assessments &&
-                          student.assessments.length > 0 &&
-                          student.assessments[0].foundation_score !==
-                            undefined ? (
-                            <span
-                              className={`text-lg font-semibold ${getScoreColor(
-                                student.assessments[0].foundation_score
-                              )}`}
-                            >
-                              {student.assessments[0].foundation_score?.toFixed(
-                                1
-                              )}
-                              %
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">No data</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {student.assessments &&
-                          student.assessments.length > 0 &&
-                          student.assessments[0].industrial_score !==
-                            undefined ? (
-                            <span
-                              className={`text-lg font-semibold ${getScoreColor(
-                                student.assessments[0].industrial_score
-                              )}`}
-                            >
-                              {student.assessments[0].industrial_score?.toFixed(
-                                1
-                              )}
-                              %
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">No data</span>
-                          )}
-                        </td>
+                        
+                       
                         <td className="px-6 py-4">
                           <button
                             onClick={() => {
@@ -517,34 +481,8 @@ const DeanDashboard: React.FC = () => {
                                 </span>
                               </div>
                             )}
-                            {assessment.foundation_score !== undefined && (
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">
-                                  Foundation:
-                                </span>
-                                <span
-                                  className={`text-sm font-semibold ${getScoreColor(
-                                    assessment.foundation_score
-                                  )}`}
-                                >
-                                  {assessment.foundation_score?.toFixed(1)}%
-                                </span>
-                              </div>
-                            )}
-                            {assessment.industrial_score !== undefined && (
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">
-                                  Industrial:
-                                </span>
-                                <span
-                                  className={`text-sm font-semibold ${getScoreColor(
-                                    assessment.industrial_score
-                                  )}`}
-                                >
-                                  {assessment.industrial_score?.toFixed(1)}%
-                                </span>
-                              </div>
-                            )}
+                            
+                            
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-600">
                                 Date:
