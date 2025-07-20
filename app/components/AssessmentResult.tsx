@@ -59,19 +59,19 @@ const AssessmentResult: React.FC<Props> = ({
 
   // Prepare data for radar chart
   const radarLabels = topicScores.map((t) => t.topic_name);
-  const radarData = topicScores.map((t) => t.normalized_score);
+  const radarData = topicScores.map((t) => Number(t.normalized_score || 0));
 
   // Get strengths and gaps based on classification and scores
   const strengths = topicScores
     .filter(
       (topic) =>
-        topic.classification === "Strength" || topic.normalized_score >= 80
+        topic.classification === "Strength" || Number(topic.normalized_score || 0) >= 80
     )
     .map((topic) => topic.topic_name);
 
   const gaps = topicScores
     .filter(
-      (topic) => topic.classification === "Gap" || topic.normalized_score < 60
+      (topic) => topic.classification === "Gap" || Number(topic.normalized_score || 0) < 60
     )
     .map((topic) => topic.topic_name);
 
@@ -180,19 +180,28 @@ const AssessmentResult: React.FC<Props> = ({
 
   return (
     <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 sm:p-10 space-y-10">
+      {/* In AssessmentResultTemplate.tsx, update the logout button */}
       <button
         onClick={() => {
-          sessionStorage.removeItem("studentData");
+          // Check if accessed from dean dashboard
+          const isDeanView = sessionStorage.getItem("selectedStudentData");
 
-          window.location.href = "/Login"; // Redirect to login route
+          if (isDeanView) {
+            sessionStorage.removeItem("selectedStudentData");
+            window.location.href = "/dean-dashboard";
+          } else {
+            sessionStorage.removeItem("studentData");
+            window.location.href = "/Login";
+          }
         }}
         className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
       >
-        Logout
+        {sessionStorage.getItem("selectedStudentData")
+          ? "Back to Dashboard"
+          : "Logout"}
       </button>
       {/* Header */}
       <div className="text-center border-b pb-6">
-      
         <h1 className="text-4xl font-bold text-indigo-700 mb-2">
           🚀 Skill Assessment Report
         </h1>
@@ -200,7 +209,6 @@ const AssessmentResult: React.FC<Props> = ({
           Generated: {new Date().toLocaleDateString()}
         </p>
       </div>
-
       {/* Student Profile */}
       <div className="grid sm:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-lg">
         <div className="space-y-2">
@@ -230,7 +238,6 @@ const AssessmentResult: React.FC<Props> = ({
           </p>
         </div>
       </div>
-
       {/* Assessment Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-blue-50 p-4 rounded-lg text-center">
@@ -267,7 +274,6 @@ const AssessmentResult: React.FC<Props> = ({
           <p className="text-sm text-gray-600">Industry Ready</p>
         </div>
       </div>
-
       {/* Radar Chart */}
       {topicScores.length > 0 && (
         <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -279,7 +285,6 @@ const AssessmentResult: React.FC<Props> = ({
           </div>
         </div>
       )}
-
       {/* Topic-wise Breakdown with Progress Bars */}
       {topicScores.length > 0 && (
         <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -287,80 +292,80 @@ const AssessmentResult: React.FC<Props> = ({
             📊 Topic-wise Performance
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {topicScores.map((topic, i) => (
-              <div
-                key={topic.topic_id}
-                className="bg-gray-50 p-4 rounded-lg border"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="text-sm font-medium text-gray-700 flex-1">
-                    {topic.topic_name}
-                  </h4>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full border ${getClassificationColor(
-                      topic.classification
-                    )}`}
-                  >
-                    {topic.classification}
-                  </span>
-                </div>
-
-                <div className="space-y-2 text-sm mb-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Correct:</span>
-                    <span className="font-medium">
-                      {topic.correct_answers}/{topic.total_questions}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Weighted Score:</span>
+            {topicScores.map((topic, i) => {
+              const normalizedScore = Number(topic.normalized_score || 0);
+              const weightedScore = Number(topic.weighted_score || 0);
+              
+              return (
+                <div
+                  key={topic.topic_id}
+                  className="bg-gray-50 p-4 rounded-lg border"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="text-sm font-medium text-gray-700 flex-1">
+                      {topic.topic_name}
+                    </h4>
                     <span
-                      className={`font-medium ${getScoreColor(
-                        topic.weighted_score
+                      className={`text-xs px-2 py-1 rounded-full border ${getClassificationColor(
+                        topic.classification
                       )}`}
                     >
-                      {topic.weighted_score.toFixed(1)}
+                      {topic.classification}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Normalized:</span>
-                    <span
-                      className={`font-medium ${getScoreColor(
-                        topic.normalized_score
-                      )}`}
-                    >
-                      {topic.normalized_score.toFixed(1)}%
-                    </span>
-                  </div>
-                </div>
 
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span>Progress</span>
-                    <span>{topic.normalized_score.toFixed(0)}%</span>
+                  <div className="space-y-2 text-sm mb-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Correct:</span>
+                      <span className="font-medium">
+                        {topic.correct_answers}/{topic.total_questions}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Weighted Score:</span>
+                      <span
+                        className={`font-medium ${getScoreColor(weightedScore)}`}
+                      >
+                        {weightedScore.toFixed(1)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Normalized:</span>
+                      <span
+                        className={`font-medium ${getScoreColor(normalizedScore)}`}
+                      >
+                        {normalizedScore.toFixed(1)}%
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
-                    <div
-                      className={`h-3 rounded-full transition-all duration-1000 ease-out ${
-                        topic.normalized_score >= 80
-                          ? "bg-green-500"
-                          : topic.normalized_score >= 60
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
-                      }`}
-                      style={{
-                        width: `${Math.min(topic.normalized_score, 100)}%`,
-                      }}
-                    ></div>
+
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span>Progress</span>
+                      <span>{normalizedScore.toFixed(0)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all duration-1000 ease-out ${
+                          normalizedScore >= 80
+                            ? "bg-green-500"
+                            : normalizedScore >= 60
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
+                        }`}
+                        style={{
+                          width: `${Math.min(normalizedScore, 100)}%`,
+                        }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
-
       {/* Strengths and Gaps */}
       <div className="grid sm:grid-cols-2 gap-6">
         <div className="bg-green-50 p-6 rounded-xl shadow-sm border border-green-200">
@@ -409,7 +414,6 @@ const AssessmentResult: React.FC<Props> = ({
           </div>
         </div>
       </div>
-
       {/* Recommendations */}
       <div className="bg-blue-50 p-6 rounded-xl shadow-sm border border-blue-200">
         <h3 className="text-lg font-bold text-blue-700 mb-4 flex items-center">
@@ -442,7 +446,6 @@ const AssessmentResult: React.FC<Props> = ({
           )}
         </div>
       </div>
-
       {/* Assessment History */}
       {assessments.length > 1 && (
         <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -512,7 +515,6 @@ const AssessmentResult: React.FC<Props> = ({
           </div>
         </div>
       )}
-
       {/* Final Status */}
       <div className="text-center">
         <div

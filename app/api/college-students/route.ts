@@ -11,6 +11,8 @@ type Assessment = {
   attempted_at: string;
   total_score: number;
   readiness_score: number;
+  foundation_score: number;
+  industrial_score: number;
   status: string;
 };
 
@@ -24,7 +26,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Fetch students with their assessment results
+   
     const result = await pool.query(
       `
       SELECT 
@@ -55,6 +57,8 @@ export async function GET(req: NextRequest) {
             'attempted_at', sa.started_at,
             'total_score', sa.total_score,
             'readiness_score', sa.readiness_score,
+            'foundation_score', sa.foundation_score,
+            'industrial_score', sa.industrial_score,
             'status', sa.status
           )
         ) FILTER (WHERE sa.id IS NOT NULL) AS assessments
@@ -70,9 +74,9 @@ export async function GET(req: NextRequest) {
     // Clean up the assessments array (remove null values)
     const students = result.rows.map(student => ({
       ...student,
-assessments: student.assessments
-  ? student.assessments.filter((assessment: Assessment) => assessment.id !== null)
-  : []
+      assessments: student.assessments
+        ? student.assessments.filter((assessment: Assessment) => assessment.id !== null)
+        : []
     }));
 
     return NextResponse.json({

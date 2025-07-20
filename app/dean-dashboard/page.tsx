@@ -1,3 +1,5 @@
+//app/dean-dashboard/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -20,6 +22,8 @@ interface AssessmentResult {
   attempted_at: string;
   total_score?: number;
   readiness_score?: number;
+  foundation_score?: number;
+  industrial_score?: number;
   status?: string;
 }
 
@@ -55,10 +59,7 @@ const DeanDashboard: React.FC = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
-  const roleOptions = [
-    { value: "ai-assessment", label: "AI Assessment" },
-    
-  ];
+  const roleOptions = [{ value: "ai-assessment", label: "AI Assessment" }];
 
   useEffect(() => {
     const adminData = sessionStorage.getItem("adminData");
@@ -216,7 +217,10 @@ const DeanDashboard: React.FC = () => {
         {/* Role Selection Section */}
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
           <div className="flex items-center gap-4">
-            <label htmlFor="role-select" className="text-lg font-semibold text-slate-700">
+            <label
+              htmlFor="role-select"
+              className="text-lg font-semibold text-slate-700"
+            >
               Select Combo:
             </label>
             <select
@@ -245,7 +249,8 @@ const DeanDashboard: React.FC = () => {
         {selectedRole && students.length > 0 && (
           <>
             <div className="text-3xl font-bold text-slate-800 mb-6 text-center">
-              Students Performance - {roleOptions.find(r => r.value === selectedRole)?.label}
+              Students Performance -{" "}
+              {roleOptions.find((r) => r.value === selectedRole)?.label}
             </div>
 
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -266,6 +271,12 @@ const DeanDashboard: React.FC = () => {
                         Readiness
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Foundation
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Industrial
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Action
                       </th>
                     </tr>
@@ -279,29 +290,36 @@ const DeanDashboard: React.FC = () => {
                               {student.name}
                             </h3>
                             <p className="text-sm text-gray-600">
-                              <span className="font-medium">Reg:</span> {student.registration_number}
+                              <span className="font-medium">Reg:</span>{" "}
+                              {student.registration_number}
                             </p>
                             <p className="text-sm text-gray-600">
-                              <span className="font-medium">Email:</span> {student.email}
+                              <span className="font-medium">Email:</span>{" "}
+                              {student.email}
                             </p>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          {student.assessments && student.assessments.length > 0 ? (
+                          {student.assessments &&
+                          student.assessments.length > 0 ? (
                             <span
                               className={`text-lg font-semibold ${getScoreColor(
                                 student.assessments[0].score_percent
                               )}`}
                             >
-                              {student.assessments[0].score}/{student.assessments[0].total_questions} 
-                              ({student.assessments[0].score_percent?.toFixed(1)}%)
+                              {student.assessments[0].score}/
+                              {student.assessments[0].total_questions}(
+                              {student.assessments[0].score_percent?.toFixed(1)}
+                              %)
                             </span>
                           ) : (
                             <span className="text-gray-400">No data</span>
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          {student.assessments && student.assessments.length > 0 && student.assessments[0].total_score !== undefined ? (
+                          {student.assessments &&
+                          student.assessments.length > 0 &&
+                          student.assessments[0].total_score !== undefined ? (
                             <span
                               className={`text-lg font-semibold ${getScoreColor(
                                 student.assessments[0].total_score
@@ -314,13 +332,57 @@ const DeanDashboard: React.FC = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          {student.assessments && student.assessments.length > 0 && student.assessments[0].readiness_score !== undefined ? (
+                          {student.assessments &&
+                          student.assessments.length > 0 &&
+                          student.assessments[0].readiness_score !==
+                            undefined ? (
                             <span
                               className={`text-lg font-semibold ${getScoreColor(
                                 student.assessments[0].readiness_score
                               )}`}
                             >
-                              {student.assessments[0].readiness_score?.toFixed(1)}%
+                              {student.assessments[0].readiness_score?.toFixed(
+                                1
+                              )}
+                              %
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">No data</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {student.assessments &&
+                          student.assessments.length > 0 &&
+                          student.assessments[0].foundation_score !==
+                            undefined ? (
+                            <span
+                              className={`text-lg font-semibold ${getScoreColor(
+                                student.assessments[0].foundation_score
+                              )}`}
+                            >
+                              {student.assessments[0].foundation_score?.toFixed(
+                                1
+                              )}
+                              %
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">No data</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {student.assessments &&
+                          student.assessments.length > 0 &&
+                          student.assessments[0].industrial_score !==
+                            undefined ? (
+                            <span
+                              className={`text-lg font-semibold ${getScoreColor(
+                                student.assessments[0].industrial_score
+                              )}`}
+                            >
+                              {student.assessments[0].industrial_score?.toFixed(
+                                1
+                              )}
+                              %
                             </span>
                           ) : (
                             <span className="text-gray-400">No data</span>
@@ -328,10 +390,17 @@ const DeanDashboard: React.FC = () => {
                         </td>
                         <td className="px-6 py-4">
                           <button
-                            onClick={() => openStudentDetails(student)}
+                            onClick={() => {
+                              // Navigate to assessment report page with student data
+                              sessionStorage.setItem(
+                                "selectedStudentData",
+                                JSON.stringify(student)
+                              );
+                              window.location.href = `/dean-assessment-report?student_id=${student.id}`;
+                            }}
                             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                           >
-                            View Details
+                            View Assessment Report
                           </button>
                         </td>
                       </tr>
@@ -363,7 +432,8 @@ const DeanDashboard: React.FC = () => {
                   {selectedStudent.name} - Detailed Performance
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Reg: {selectedStudent.registration_number} | Email: {selectedStudent.email}
+                  Reg: {selectedStudent.registration_number} | Email:{" "}
+                  {selectedStudent.email}
                 </p>
               </div>
               <button
@@ -377,91 +447,120 @@ const DeanDashboard: React.FC = () => {
             {/* Popup Content */}
             <div className="p-6">
               {/* Assessment Overview */}
-              {selectedStudent.assessments && selectedStudent.assessments.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-slate-700 mb-4">
-                    📈 Assessment Overview
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {selectedStudent.assessments.map((assessment) => (
-                      <div
-                        key={assessment.id}
-                        className="bg-gray-50 rounded-lg p-4 border"
-                      >
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-gray-600">
-                            Assessment
-                          </span>
-                          <span
-                            className={`text-sm px-2 py-1 rounded-full ${
-                              assessment.status === "completed"
-                                ? "bg-green-100 text-green-800"
-                                : assessment.status === "in_progress"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {assessment.status || "completed"}
-                          </span>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">
-                              Basic Score:
+              {selectedStudent.assessments &&
+                selectedStudent.assessments.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-semibold text-slate-700 mb-4">
+                      📈 Assessment Overview
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {selectedStudent.assessments.map((assessment) => (
+                        <div
+                          key={assessment.id}
+                          className="bg-gray-50 rounded-lg p-4 border"
+                        >
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-gray-600">
+                              Assessment
                             </span>
                             <span
-                              className={`text-sm font-semibold ${getScoreColor(
-                                assessment.score_percent
-                              )}`}
+                              className={`text-sm px-2 py-1 rounded-full ${
+                                assessment.status === "completed"
+                                  ? "bg-green-100 text-green-800"
+                                  : assessment.status === "in_progress"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
                             >
-                              {assessment.score}/{assessment.total_questions} (
-                              {assessment.score_percent?.toFixed(1)}%)
+                              {assessment.status || "completed"}
                             </span>
                           </div>
-                          {assessment.total_score !== undefined && (
+                          <div className="space-y-2">
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-600">
-                                Total Score:
+                                Basic Score:
                               </span>
                               <span
                                 className={`text-sm font-semibold ${getScoreColor(
-                                  assessment.total_score
+                                  assessment.score_percent
                                 )}`}
                               >
-                                {assessment.total_score?.toFixed(1)}
+                                {assessment.score}/{assessment.total_questions}{" "}
+                                ({assessment.score_percent?.toFixed(1)}%)
                               </span>
                             </div>
-                          )}
-                          {assessment.readiness_score !== undefined && (
+                            {assessment.total_score !== undefined && (
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">
+                                  Total Score:
+                                </span>
+                                <span
+                                  className={`text-sm font-semibold ${getScoreColor(
+                                    assessment.total_score
+                                  )}`}
+                                >
+                                  {assessment.total_score?.toFixed(1)}
+                                </span>
+                              </div>
+                            )}
+                            {assessment.readiness_score !== undefined && (
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">
+                                  Readiness:
+                                </span>
+                                <span
+                                  className={`text-sm font-semibold ${getScoreColor(
+                                    assessment.readiness_score
+                                  )}`}
+                                >
+                                  {assessment.readiness_score?.toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
+                            {assessment.foundation_score !== undefined && (
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">
+                                  Foundation:
+                                </span>
+                                <span
+                                  className={`text-sm font-semibold ${getScoreColor(
+                                    assessment.foundation_score
+                                  )}`}
+                                >
+                                  {assessment.foundation_score?.toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
+                            {assessment.industrial_score !== undefined && (
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">
+                                  Industrial:
+                                </span>
+                                <span
+                                  className={`text-sm font-semibold ${getScoreColor(
+                                    assessment.industrial_score
+                                  )}`}
+                                >
+                                  {assessment.industrial_score?.toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-600">
-                                Readiness:
+                                Date:
                               </span>
-                              <span
-                                className={`text-sm font-semibold ${getScoreColor(
-                                  assessment.readiness_score
-                                )}`}
-                              >
-                                {assessment.readiness_score?.toFixed(1)}%
+                              <span className="text-sm text-gray-800">
+                                {new Date(
+                                  assessment.attempted_at
+                                ).toLocaleDateString()}
                               </span>
                             </div>
-                          )}
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">
-                              Date:
-                            </span>
-                            <span className="text-sm text-gray-800">
-                              {new Date(
-                                assessment.attempted_at
-                              ).toLocaleDateString()}
-                            </span>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Topic-wise Performance */}
               <div>
@@ -469,7 +568,8 @@ const DeanDashboard: React.FC = () => {
                   📊 Topic-wise Performance
                 </h3>
 
-                {selectedStudent.topicScores && selectedStudent.topicScores.length > 0 ? (
+                {selectedStudent.topicScores &&
+                selectedStudent.topicScores.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {selectedStudent.topicScores.map((topic, index) => (
                       <div
