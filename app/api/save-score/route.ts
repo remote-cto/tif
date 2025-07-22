@@ -4,7 +4,7 @@ import pool from "@/lib/database";
 
 interface SaveScoreRequest {
   student_id: number;
-  answers: { [key: string]: number }; // question_id -> selected_option
+  answers: { [key: string]: number };
   questions: Array<{
     id: string;
     correctAnswer: number;
@@ -13,7 +13,6 @@ interface SaveScoreRequest {
   }>;
   time_started: number;
   time_completed: number;
-  // Add calculated scores from frontend
   readiness_score: number;
   total_score: number;
   topic_scores: Array<{
@@ -43,21 +42,16 @@ export async function POST(req: NextRequest) {
       questions, 
       time_started, 
       time_completed,
-      readiness_score, // Use frontend calculated value
-      total_score,     // Use frontend calculated value
-      topic_scores     // Use frontend calculated topic scores
+      readiness_score,
+      total_score,
+      topic_scores
     }: SaveScoreRequest = await req.json();
 
     if (!student_id || !answers || !questions || !time_started || !time_completed) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Calculate basic scores only (no complex calculations)
-    const totalQuestions = questions.length;
-    const correctAnswers = questions.filter(q => answers[q.id] === q.correctAnswer).length;
-    const scorePercent = (correctAnswers / totalQuestions) * 100;
-
-    // Create student_assessment record using frontend calculated scores
+    // Create student_assessment record
     const assessmentQuery = `
       INSERT INTO student_assessments (
         student_id, 
@@ -78,8 +72,8 @@ export async function POST(req: NextRequest) {
       student_id,
       startedAt,
       completedAt,
-      total_score,      // Use frontend calculated total_score
-      readiness_score,  // Use frontend calculated readiness_score
+      total_score,
+      readiness_score,
       'completed'
     ]);
 
@@ -102,7 +96,7 @@ export async function POST(req: NextRequest) {
       `, [
         studentAssessmentId,
         parseInt(question.id),
-        String.fromCharCode(65 + selectedOption), // Convert 0,1,2,3 to A,B,C,D
+        String.fromCharCode(65 + selectedOption),
         isCorrect,
         completedAt
       ]);
@@ -110,7 +104,7 @@ export async function POST(req: NextRequest) {
 
     await Promise.all(answerInserts);
 
-    // Insert topic-wise scores using frontend calculated data
+    // Insert topic-wise scores
     const topicInserts = topic_scores.map(topicData => {
       return client.query(`
         INSERT INTO student_topic_scores (
@@ -144,21 +138,13 @@ export async function POST(req: NextRequest) {
 
     await Promise.all(topicInserts);
 
-    // Maintain the old student_results table for backward compatibility
-    await client.query(`
-      INSERT INTO student_results (student_id, assessment_id, correct_answers, total_questions, score_percent)
-      VALUES ($1, $2, $3, $4, $5)
-    `, [student_id, studentAssessmentId, correctAnswers, totalQuestions, scorePercent]);
-
     await client.query('COMMIT');
 
     return NextResponse.json({ 
       success: true, 
       assessment_id: studentAssessmentId,
       total_score: total_score,        
-      readiness_score: readiness_score, 
-      correct_answers: correctAnswers,
-      total_questions: totalQuestions
+      readiness_score: readiness_score
     });
 
   } catch (err) {

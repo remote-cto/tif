@@ -1,4 +1,3 @@
-//app/dashboard/assessment/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import {
@@ -39,7 +38,6 @@ interface TopicScore {
   normalizedScore: number;
 }
 
-// Interface matching the AssessmentResult component's expected TopicScore
 interface AssessmentResultTopicScore {
   topic_id: number;
   topic_name: string;
@@ -50,7 +48,6 @@ interface AssessmentResultTopicScore {
   classification: string;
 }
 
-// Interface matching the AssessmentResult component's expected AssessmentResult
 interface AssessmentResultData {
   id: number;
   score: number;
@@ -107,20 +104,6 @@ const difficultyWeights: Record<DifficultyKey, number> = {
   Advanced: 2.0,
 };
 
-const topicIcons: Record<
-  TopicKey,
-  React.ComponentType<{ className?: string }>
-> = {
-  Python: Code,
-  "ML Concepts": Brain,
-  "Cloud & Deployment": Cloud,
-  "Tools & Git": GitBranch,
-  "AI Use Cases": Lightbulb,
-  Projects: FolderOpen,
-  Math: Calculator,
-  "Modern AI Stack Awareness": Brain,
-};
-
 const AssessmentPage: React.FC = () => {
   const [state, setState] = useState<AssessmentState>({
     currentQuestion: 0,
@@ -146,11 +129,29 @@ const AssessmentPage: React.FC = () => {
     }
   }, []);
 
+  // Load questions
+  useEffect(() => {
+    fetch("/api/assessment")
+      .then((res) => res.json())
+      .then((data) => {
+        setState((prev) => ({
+          ...prev,
+          questions: data.questions,
+        }));
+      })
+      .catch((err) => console.error("Failed to fetch questions", err));
+  }, []);
+
+  // Timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeElapsed(Math.floor((Date.now() - state.timeStarted) / 1000));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [state.timeStarted]);
+
   // Save assessment results
   useEffect(() => {
-    // Update the saveResult function in AssessmentPage component
-    // Replace the existing saveResult function with this:
-
     const saveResult = async () => {
       if (!student) return;
 
@@ -158,14 +159,12 @@ const AssessmentPage: React.FC = () => {
       setSaveError(null);
 
       try {
-        // Calculate readiness score and total score using the same logic as display
         const readinessScore = getReadinessScore();
         const totalScore = Object.values(state.topicScores).reduce(
           (sum, t) => sum + t.score,
           0
         );
 
-        // Prepare topic scores data
         const topicScoresData = Object.values(state.topicScores).map(
           (topic) => ({
             topic: topic.topic,
@@ -185,7 +184,6 @@ const AssessmentPage: React.FC = () => {
           },
           body: JSON.stringify({
             student_id: parseInt(student.id),
-            questionnaire_id: null,
             answers: state.answers,
             questions: state.questions.map((q) => ({
               id: q.id,
@@ -195,7 +193,6 @@ const AssessmentPage: React.FC = () => {
             })),
             time_started: state.timeStarted,
             time_completed: Date.now(),
-            // Send calculated scores from frontend
             readiness_score: readinessScore,
             total_score: totalScore,
             topic_scores: topicScoresData,
@@ -207,15 +204,8 @@ const AssessmentPage: React.FC = () => {
         }
 
         const result = await response.json();
-        console.log("Assessment saved successfully:", result);
-
-        // Store the actual assessment ID from the response
         if (result.assessment_id) {
           setAssessmentId(result.assessment_id);
-          localStorage.setItem(
-            "last_assessment_id",
-            result.assessment_id.toString()
-          );
         }
       } catch (error) {
         console.error("Error saving assessment:", error);
@@ -225,57 +215,10 @@ const AssessmentPage: React.FC = () => {
       }
     };
 
-    // Only save if completed and we don't have an ID yet and we're not already saving
     if (state.isCompleted && !assessmentId && !isSaving && student) {
       saveResult();
     }
-  }, [
-    state.isCompleted,
-    state.answers,
-    state.questions,
-    state.timeStarted,
-    assessmentId,
-    isSaving,
-    student,
-  ]);
-
-  const getDetailedResults = async (assessmentId: number) => {
-    try {
-      const response = await fetch(`/api/assessment-results/${assessmentId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch detailed results");
-      }
-      return await response.json();
-    } catch (error) {
-      console.error("Error fetching detailed results:", error);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    fetch("/api/assessment")
-      .then((res) => res.json())
-      .then((data) => {
-        setState((prev) => ({
-          ...prev,
-          questions: data.questions,
-        }));
-      })
-      .catch((err) => console.error("Failed to fetch questions", err));
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeElapsed(Math.floor((Date.now() - state.timeStarted) / 1000));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [state.timeStarted]);
-
-  const currentQuestion = state.questions[state.currentQuestion];
-
-  const handleAnswerSelect = (index: number) => {
-    setSelectedAnswer(index);
-  };
+  }, [state.isCompleted, assessmentId, isSaving, student]);
 
   const calculateTopicScore = (
     topic: string,
@@ -331,12 +274,16 @@ const AssessmentPage: React.FC = () => {
     };
   };
 
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswer(index);
+  };
+
   const handleNextQuestion = () => {
     if (selectedAnswer === null) return;
 
     const newAnswers = {
       ...state.answers,
-      [currentQuestion.id]: selectedAnswer,
+      [state.questions[state.currentQuestion].id]: selectedAnswer,
     };
 
     if (state.currentQuestion < state.questions.length - 1) {
@@ -381,16 +328,10 @@ const AssessmentPage: React.FC = () => {
     return Math.min(100, (totalScore / maxPossible) * 100);
   };
 
-  const getStrengthsAndGaps = () => {
-    const strengths: string[] = [];
-    const gaps: string[] = [];
-
-    Object.values(state.topicScores).forEach((topic) => {
-      if (topic.normalizedScore >= 70) strengths.push(topic.topic);
-      else if (topic.normalizedScore < 50) gaps.push(topic.topic);
-    });
-
-    return { strengths, gaps };
+  const getClassification = (normalizedScore: number): string => {
+    if (normalizedScore >= 80) return "Strength";
+    if (normalizedScore < 60) return "Gap";
+    return "Optional";
   };
 
   const getRecommendationText = (topic: string): string => {
@@ -408,12 +349,7 @@ const AssessmentPage: React.FC = () => {
     return map[topic] || "Practice and deepen understanding of this topic.";
   };
 
-  // Helper function to get classification based on normalized score
-const getClassification = (normalizedScore: number): string => {
-  if (normalizedScore >= 80) return "Strength";
-  if (normalizedScore < 60) return "Gap";
-  return "Optional";
-};
+  const currentQuestion = state.questions[state.currentQuestion];
 
   // Loading state for student data
   if (!student) {
@@ -455,7 +391,6 @@ const getClassification = (normalizedScore: number): string => {
           <button
             onClick={() => {
               setSaveError(null);
-              // Trigger save retry by temporarily setting isCompleted to false then true
               setState((prev) => ({ ...prev, isCompleted: false }));
               setTimeout(
                 () => setState((prev) => ({ ...prev, isCompleted: true })),
@@ -486,7 +421,6 @@ const getClassification = (normalizedScore: number): string => {
     );
     const scorePercent = (totalCorrectAnswers / state.questions.length) * 100;
 
-    // Transform topicScores to match the AssessmentResult component interface
     const topicScoresForTemplate: AssessmentResultTopicScore[] = Object.values(
       state.topicScores
     ).map((topic, index) => ({
@@ -499,7 +433,6 @@ const getClassification = (normalizedScore: number): string => {
       classification: getClassification(topic.normalizedScore),
     }));
 
-    // Create assessment result data with REAL DYNAMIC ID
     const assessmentData: AssessmentResultData = {
       id: assessmentId,
       score: totalCorrectAnswers,
@@ -514,7 +447,6 @@ const getClassification = (normalizedScore: number): string => {
       status: "completed",
     };
 
-    // Create student data matching the expected interface
     const studentData = {
       id: parseInt(student.id) || 1,
       name: student.name,
@@ -524,29 +456,6 @@ const getClassification = (normalizedScore: number): string => {
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-        <style jsx global>{`
-          .glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          }
-
-          .animate-fill {
-            animation: fillBar 1.5s ease-in-out;
-          }
-
-          @keyframes fillBar {
-            from {
-              width: 0%;
-            }
-            to {
-              width: var(--final-width);
-            }
-          }
-        `}</style>
-
         <AssessmentResult
           student={studentData}
           assessments={[assessmentData]}

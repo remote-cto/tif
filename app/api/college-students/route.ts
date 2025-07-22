@@ -27,47 +27,59 @@ export async function GET(req: NextRequest) {
 
   try {
    
-    const result = await pool.query(
-      `
-      SELECT 
-        s.id,
-        s.name,
-        s.registration_number,
-        s.email,
-        json_agg(
-          json_build_object(
-            'id', sa.id,
-            'score', COALESCE(
-              (SELECT COUNT(*) FROM student_answers ans 
-               WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true), 0
-            ),
-            'total_questions', COALESCE(
-              (SELECT COUNT(*) FROM student_answers ans 
-               WHERE ans.student_assessment_id = sa.id), 0
-            ),
-            'score_percent', CASE 
-              WHEN (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id) > 0 
-              THEN (
-                (SELECT COUNT(*) FROM student_answers ans 
-                 WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true) * 100.0 / 
-                (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id)
-              )
-              ELSE 0
-            END,
-            'attempted_at', sa.started_at,
-            'total_score', sa.total_score,
-            'readiness_score', sa.readiness_score,
-            'status', sa.status
+  const result = await pool.query(
+  `
+  WITH latest_assessments AS (
+    SELECT sa.*
+    FROM student_assessments sa
+    INNER JOIN (
+      SELECT student_id, MAX(started_at) AS max_started
+      FROM student_assessments
+      GROUP BY student_id
+    ) latest ON sa.student_id = latest.student_id AND sa.started_at = latest.max_started
+  )
+
+  SELECT 
+    s.id,
+    s.name,
+    s.registration_number,
+    s.email,
+    json_agg(
+      json_build_object(
+        'id', sa.id,
+        'score', COALESCE(
+          (SELECT COUNT(*) FROM student_answers ans 
+           WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true), 0
+        ),
+        'total_questions', COALESCE(
+          (SELECT COUNT(*) FROM student_answers ans 
+           WHERE ans.student_assessment_id = sa.id), 0
+        ),
+        'score_percent', CASE 
+          WHEN (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id) > 0 
+          THEN (
+            (SELECT COUNT(*) FROM student_answers ans 
+             WHERE ans.student_assessment_id = sa.id AND ans.is_correct = true) * 100.0 / 
+            (SELECT COUNT(*) FROM student_answers ans WHERE ans.student_assessment_id = sa.id)
           )
-        ) FILTER (WHERE sa.id IS NOT NULL) AS assessments
-      FROM students s
-      LEFT JOIN student_assessments sa ON s.id = sa.student_id
-      WHERE s.college_id = $1
-      GROUP BY s.id, s.name, s.registration_number, s.email
-      ORDER BY s.name;
-      `,
-      [college_id]
-    );
+          ELSE 0
+        END,
+        'attempted_at', sa.started_at,
+        'total_score', sa.total_score,
+        'readiness_score', sa.readiness_score,
+        'status', sa.status
+      )
+    ) FILTER (WHERE sa.id IS NOT NULL) AS assessments
+  FROM students s
+  LEFT JOIN latest_assessments sa ON s.id = sa.student_id
+  WHERE s.college_id = $1
+  GROUP BY s.id, s.name, s.registration_number, s.email
+  ORDER BY s.name;
+  `,
+  [college_id]
+);
+
+    
 
     // Clean up the assessments array (remove null values)
     const students = result.rows.map(student => ({

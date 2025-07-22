@@ -298,7 +298,9 @@ const AssessmentResult: React.FC<Props> = ({
               
               return (
                 <div
-                  key={topic.topic_id}
+                  key={`${topic.topic_id}-${i}`}
+
+
                   className="bg-gray-50 p-4 rounded-lg border"
                 >
                   <div className="flex justify-between items-start mb-2">

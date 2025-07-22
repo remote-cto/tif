@@ -4,26 +4,31 @@ import pool from "@/lib/database";
 export async function GET(req: NextRequest) {
   try {
     const query = `
-      SELECT 
-        q.id,
-        q.question,
-        q.option_a,
-        q.option_b,
-        q.option_c,
-        q.option_d,
-        q.correct_answer,
-        t.name AS topic,
-        s.name AS section,
-        l.name AS level,
-        t.industry_weight,
-        l.difficulty_weight,
-        ROW_NUMBER() OVER (ORDER BY q.id) as row_num
-      FROM questions q
-      JOIN topics t ON q.topic_id = t.id
-      JOIN sections s ON t.section_id = s.id
-      JOIN levels l ON q.level_id = l.id
-      WHERE q.is_active = TRUE
-      ORDER BY q.id;
+      SELECT * FROM (
+        SELECT 
+          q.id,
+          q.question,
+          q.option_a,
+          q.option_b,
+          q.option_c,
+          q.option_d,
+          q.correct_answer,
+          t.name AS topic,
+          s.name AS section,
+          l.name AS level,
+          t.industry_weight,
+          l.difficulty_weight,
+          ROW_NUMBER() OVER (
+            PARTITION BY q.topic_id, q.level_id 
+            ORDER BY RANDOM()
+          ) AS row_num
+        FROM questions q
+        JOIN topics t ON q.topic_id = t.id
+        JOIN sections s ON t.section_id = s.id
+        JOIN levels l ON q.level_id = l.id
+        WHERE q.is_active = TRUE
+      ) sub
+      WHERE sub.row_num = 1;
     `;
 
     const result = await pool.query(query);

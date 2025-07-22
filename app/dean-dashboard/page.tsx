@@ -505,7 +505,8 @@ const DeanDashboard: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {selectedStudent.topicScores.map((topic, index) => (
                       <div
-                        key={`${selectedStudent.id}-${topic.topic_id}-${index}`}
+                            key={`${selectedStudent.id}-${topic.topic_id}-${index}`}
+
                         className="bg-white rounded-lg p-4 border-2 border-gray-200 shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="flex justify-between items-start mb-3">
