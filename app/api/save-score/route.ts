@@ -1,6 +1,4 @@
-
-//api/save-score/route.
-
+// api/save-score/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/database";
 
@@ -15,6 +13,22 @@ interface SaveScoreRequest {
   }>;
   time_started: number;
   time_completed: number;
+  // Add calculated scores from frontend
+  readiness_score: number;
+  total_score: number;
+  topic_scores: Array<{
+    topic: string;
+    correct: number;
+    total: number;
+    weighted_score: number;
+    normalized_score: number;
+    classification: string;
+    levels: {
+      Basic: number;
+      Intermediate: number;
+      Advanced: number;
+    };
+  }>;
 }
 
 export async function POST(req: NextRequest) {
@@ -28,22 +42,22 @@ export async function POST(req: NextRequest) {
       answers, 
       questions, 
       time_started, 
-      time_completed 
+      time_completed,
+      readiness_score, // Use frontend calculated value
+      total_score,     // Use frontend calculated value
+      topic_scores     // Use frontend calculated topic scores
     }: SaveScoreRequest = await req.json();
 
     if (!student_id || !answers || !questions || !time_started || !time_completed) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Calculate scores
+    // Calculate basic scores only (no complex calculations)
     const totalQuestions = questions.length;
     const correctAnswers = questions.filter(q => answers[q.id] === q.correctAnswer).length;
     const scorePercent = (correctAnswers / totalQuestions) * 100;
 
-      // Calculate readiness score (you can adjust this logic based on your requirements)
-    const readinessScore = calculateReadinessScore(answers, questions);
-
-    // Create student_assessment record (without questionnaire_id)
+    // Create student_assessment record using frontend calculated scores
     const assessmentQuery = `
       INSERT INTO student_assessments (
         student_id, 
@@ -64,8 +78,8 @@ export async function POST(req: NextRequest) {
       student_id,
       startedAt,
       completedAt,
-      scorePercent,
-      readinessScore,
+      total_score,      // Use frontend calculated total_score
+      readiness_score,  // Use frontend calculated readiness_score
       'completed'
     ]);
 
@@ -96,49 +110,8 @@ export async function POST(req: NextRequest) {
 
     await Promise.all(answerInserts);
 
-
-
-    function calculateReadinessScore(answers: { [key: string]: number }, questions: Array<any>): number {
-  const topicWeights: { [key: string]: number } = {
-    'ML Concepts': 1.2,
-    'Python': 1.0,
-    'Cloud & Deployment': 1.5,
-    'Tools & Git': 1.1,
-    'AI Use Cases': 1.1,
-    'Projects': 0.9,
-    'Math': 0.8,
-    'Modern AI Stack Awareness': 1.5,
-  };
-
-  const difficultyWeights: { [key: string]: number } = {
-    'Basic': 1.0,
-    'Intermediate': 1.5,
-    'Advanced': 2.0,
-  };
-
-  let totalWeightedScore = 0;
-  let maxPossibleScore = 0;
-
-  questions.forEach(question => {
-    const isCorrect = answers[question.id] === question.correctAnswer;
-    const topicWeight = topicWeights[question.topic] || 1.0;
-    const difficultyWeight = difficultyWeights[question.level] || 1.0;
-    const questionWeight = topicWeight * difficultyWeight;
-
-    if (isCorrect) {
-      totalWeightedScore += questionWeight;
-    }
-    maxPossibleScore += questionWeight;
-  });
-
-  return Math.min(100, (totalWeightedScore / maxPossibleScore) * 100);
-}
-
-
- // 3. Calculate and store topic-wise scores
-    const topicScores = calculateTopicScores(answers, questions);
-    
-    const topicInserts = Object.entries(topicScores).map(([topicName, scores]) => {
+    // Insert topic-wise scores using frontend calculated data
+    const topicInserts = topic_scores.map(topicData => {
       return client.query(`
         INSERT INTO student_topic_scores (
           student_assessment_id,
@@ -157,79 +130,19 @@ export async function POST(req: NextRequest) {
         WHERE t.name = $10
       `, [
         studentAssessmentId,
-        scores.correct,
-        scores.total,
-        scores.levels.Basic,
-        scores.levels.Intermediate,
-        scores.levels.Advanced,
-        scores.weightedScore,
-        scores.normalizedScore,
-        scores.classification,
-        topicName
+        topicData.correct,
+        topicData.total,
+        topicData.levels.Basic,
+        topicData.levels.Intermediate,
+        topicData.levels.Advanced,
+        topicData.weighted_score,
+        topicData.normalized_score,
+        topicData.classification,
+        topicData.topic
       ]);
     });
 
     await Promise.all(topicInserts);
-   
-
-function calculateTopicScores(answers: { [key: string]: number }, questions: Array<any>) {
-  const topicScores: { [key: string]: any } = {};
-
-  questions.forEach(question => {
-    const topic = question.topic;
-    const level = question.level;
-    const isCorrect = answers[question.id] === question.correctAnswer;
-
-    if (!topicScores[topic]) {
-      topicScores[topic] = {
-        correct: 0,
-        total: 0,
-        levels: { Basic: 0, Intermediate: 0, Advanced: 0 },
-        weightedScore: 0,
-        normalizedScore: 0,
-        classification: 'Optional'
-      };
-    }
-
-    topicScores[topic].total++;
-    if (isCorrect) {
-      topicScores[topic].correct++;
-      topicScores[topic].levels[level]++;
-    }
-  });
-
-  // Calculate weighted and normalized scores
-  Object.keys(topicScores).forEach(topic => {
-    const scores = topicScores[topic];
-    const accuracy = scores.correct / scores.total;
-    
-    // Calculate weighted score based on difficulty distribution
-    const difficultyWeights = { Basic: 1.0, Intermediate: 1.5, Advanced: 2.0 };
-    const avgDifficultyWeight = (
-      scores.levels.Basic * difficultyWeights.Basic +
-      scores.levels.Intermediate * difficultyWeights.Intermediate +
-      scores.levels.Advanced * difficultyWeights.Advanced
-    ) / (scores.levels.Basic + scores.levels.Intermediate + scores.levels.Advanced || 1);
-
-    scores.weightedScore = accuracy * avgDifficultyWeight * 100;
-    scores.normalizedScore = Math.min(100, scores.weightedScore);
-    
-    // Classify performance
-    if (scores.normalizedScore >= 75) {
-      scores.classification = 'Strength';
-    } else if (scores.normalizedScore < 50) {
-      scores.classification = 'Gap';
-    } else {
-      scores.classification = 'Optional';
-    }
-  });
-
-  return topicScores;
-}
-
-
-
-
 
     // Maintain the old student_results table for backward compatibility
     await client.query(`
@@ -242,8 +155,8 @@ function calculateTopicScores(answers: { [key: string]: number }, questions: Arr
     return NextResponse.json({ 
       success: true, 
       assessment_id: studentAssessmentId,
-      total_score: scorePercent,
-      readiness_score: readinessScore,
+      total_score: total_score,        
+      readiness_score: readiness_score, 
       correct_answers: correctAnswers,
       total_questions: totalQuestions
     });

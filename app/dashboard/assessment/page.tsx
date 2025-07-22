@@ -148,6 +148,9 @@ const AssessmentPage: React.FC = () => {
 
   // Save assessment results
   useEffect(() => {
+    // Update the saveResult function in AssessmentPage component
+    // Replace the existing saveResult function with this:
+
     const saveResult = async () => {
       if (!student) return;
 
@@ -155,6 +158,26 @@ const AssessmentPage: React.FC = () => {
       setSaveError(null);
 
       try {
+        // Calculate readiness score and total score using the same logic as display
+        const readinessScore = getReadinessScore();
+        const totalScore = Object.values(state.topicScores).reduce(
+          (sum, t) => sum + t.score,
+          0
+        );
+
+        // Prepare topic scores data
+        const topicScoresData = Object.values(state.topicScores).map(
+          (topic) => ({
+            topic: topic.topic,
+            correct: topic.correct,
+            total: topic.total,
+            weighted_score: topic.score,
+            normalized_score: topic.normalizedScore,
+            classification: getClassification(topic.normalizedScore),
+            levels: topic.levels,
+          })
+        );
+
         const response = await fetch("/api/save-score", {
           method: "POST",
           headers: {
@@ -164,33 +187,39 @@ const AssessmentPage: React.FC = () => {
             student_id: parseInt(student.id),
             questionnaire_id: null,
             answers: state.answers,
-            questions: state.questions.map(q => ({
+            questions: state.questions.map((q) => ({
               id: q.id,
               correctAnswer: q.correctAnswer,
               topic: q.topic,
-              level: q.level
+              level: q.level,
             })),
             time_started: state.timeStarted,
-            time_completed: Date.now()
+            time_completed: Date.now(),
+            // Send calculated scores from frontend
+            readiness_score: readinessScore,
+            total_score: totalScore,
+            topic_scores: topicScoresData,
           }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to save assessment');
+          throw new Error("Failed to save assessment");
         }
 
         const result = await response.json();
-        console.log('Assessment saved successfully:', result);
-        
+        console.log("Assessment saved successfully:", result);
+
         // Store the actual assessment ID from the response
         if (result.assessment_id) {
           setAssessmentId(result.assessment_id);
-          localStorage.setItem('last_assessment_id', result.assessment_id.toString());
+          localStorage.setItem(
+            "last_assessment_id",
+            result.assessment_id.toString()
+          );
         }
-        
       } catch (error) {
-        console.error('Error saving assessment:', error);
-        setSaveError('Failed to save assessment. Please try again.');
+        console.error("Error saving assessment:", error);
+        setSaveError("Failed to save assessment. Please try again.");
       } finally {
         setIsSaving(false);
       }
@@ -200,17 +229,25 @@ const AssessmentPage: React.FC = () => {
     if (state.isCompleted && !assessmentId && !isSaving && student) {
       saveResult();
     }
-  }, [state.isCompleted, state.answers, state.questions, state.timeStarted, assessmentId, isSaving, student]);
+  }, [
+    state.isCompleted,
+    state.answers,
+    state.questions,
+    state.timeStarted,
+    assessmentId,
+    isSaving,
+    student,
+  ]);
 
   const getDetailedResults = async (assessmentId: number) => {
     try {
       const response = await fetch(`/api/assessment-results/${assessmentId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch detailed results');
+        throw new Error("Failed to fetch detailed results");
       }
       return await response.json();
     } catch (error) {
-      console.error('Error fetching detailed results:', error);
+      console.error("Error fetching detailed results:", error);
       return null;
     }
   };
@@ -372,11 +409,11 @@ const AssessmentPage: React.FC = () => {
   };
 
   // Helper function to get classification based on normalized score
-  const getClassification = (normalizedScore: number): string => {
-    if (normalizedScore >= 80) return "Strength";
-    if (normalizedScore < 60) return "Gap";
-    return "Optional";
-  };
+const getClassification = (normalizedScore: number): string => {
+  if (normalizedScore >= 80) return "Strength";
+  if (normalizedScore < 60) return "Gap";
+  return "Optional";
+};
 
   // Loading state for student data
   if (!student) {
@@ -396,7 +433,9 @@ const AssessmentPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-700">Saving your assessment and Generate your Report</p>
+          <p className="text-lg text-gray-700">
+            Saving your assessment and Generate your Report
+          </p>
           <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
         </div>
       </div>
@@ -417,8 +456,11 @@ const AssessmentPage: React.FC = () => {
             onClick={() => {
               setSaveError(null);
               // Trigger save retry by temporarily setting isCompleted to false then true
-              setState(prev => ({ ...prev, isCompleted: false }));
-              setTimeout(() => setState(prev => ({ ...prev, isCompleted: true })), 100);
+              setState((prev) => ({ ...prev, isCompleted: false }));
+              setTimeout(
+                () => setState((prev) => ({ ...prev, isCompleted: true })),
+                100
+              );
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition mr-3"
           >
@@ -439,22 +481,23 @@ const AssessmentPage: React.FC = () => {
   if (state.isCompleted && assessmentId) {
     const readinessScore = getReadinessScore();
     const totalCorrectAnswers = Object.values(state.topicScores).reduce(
-      (sum, topic) => sum + topic.correct, 0
+      (sum, topic) => sum + topic.correct,
+      0
     );
     const scorePercent = (totalCorrectAnswers / state.questions.length) * 100;
 
     // Transform topicScores to match the AssessmentResult component interface
-    const topicScoresForTemplate: AssessmentResultTopicScore[] = Object.values(state.topicScores).map(
-      (topic, index) => ({
-        topic_id: index + 1,
-        topic_name: topic.topic,
-        correct_answers: topic.correct,
-        total_questions: topic.total,
-        weighted_score: topic.score,
-        normalized_score: topic.normalizedScore,
-        classification: getClassification(topic.normalizedScore),
-      })
-    );
+    const topicScoresForTemplate: AssessmentResultTopicScore[] = Object.values(
+      state.topicScores
+    ).map((topic, index) => ({
+      topic_id: index + 1,
+      topic_name: topic.topic,
+      correct_answers: topic.correct,
+      total_questions: topic.total,
+      weighted_score: topic.score,
+      normalized_score: topic.normalizedScore,
+      classification: getClassification(topic.normalizedScore),
+    }));
 
     // Create assessment result data with REAL DYNAMIC ID
     const assessmentData: AssessmentResultData = {
@@ -463,7 +506,10 @@ const AssessmentPage: React.FC = () => {
       total_questions: state.questions.length,
       score_percent: scorePercent,
       attempted_at: new Date(state.timeStarted).toISOString(),
-      total_score: Object.values(state.topicScores).reduce((sum, t) => sum + t.score, 0),
+      total_score: Object.values(state.topicScores).reduce(
+        (sum, t) => sum + t.score,
+        0
+      ),
       readiness_score: readinessScore,
       status: "completed",
     };
