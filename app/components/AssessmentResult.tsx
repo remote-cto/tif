@@ -57,21 +57,32 @@ const AssessmentResult: React.FC<Props> = ({
   const readiness = latestAssessment?.readiness_score || 0;
   const totalScore = latestAssessment?.total_score || 0;
 
-  // Prepare data for radar chart
-  const radarLabels = topicScores.map((t) => t.topic_name);
-  const radarData = topicScores.map((t) => Number(t.normalized_score || 0));
+// Deduplicate topics by topic_name, keeping the first occurrence
+const uniqueTopicsMap = new Map();
+topicScores.forEach((t) => {
+  if (!uniqueTopicsMap.has(t.topic_name)) {
+    uniqueTopicsMap.set(t.topic_name, t);
+  }
+});
+const uniqueTopics = Array.from(uniqueTopicsMap.values());
+const radarLabels = uniqueTopics.map((t) => t.topic_name);
+const radarData = uniqueTopics.map((t) => Number(t.normalized_score || 0));
+
 
   // Get strengths and gaps based on classification and scores
   const strengths = topicScores
     .filter(
       (topic) =>
-        topic.classification === "Strength" || Number(topic.normalized_score || 0) >= 80
+        topic.classification === "Strength" ||
+        Number(topic.normalized_score || 0) >= 80
     )
     .map((topic) => topic.topic_name);
 
   const gaps = topicScores
     .filter(
-      (topic) => topic.classification === "Gap" || Number(topic.normalized_score || 0) < 60
+      (topic) =>
+        topic.classification === "Gap" ||
+        Number(topic.normalized_score || 0) < 60
     )
     .map((topic) => topic.topic_name);
 
@@ -295,12 +306,10 @@ const AssessmentResult: React.FC<Props> = ({
             {topicScores.map((topic, i) => {
               const normalizedScore = Number(topic.normalized_score || 0);
               const weightedScore = Number(topic.weighted_score || 0);
-              
+
               return (
                 <div
                   key={`${topic.topic_id}-${i}`}
-
-
                   className="bg-gray-50 p-4 rounded-lg border"
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -326,7 +335,9 @@ const AssessmentResult: React.FC<Props> = ({
                     <div className="flex justify-between">
                       <span className="text-gray-600">Weighted Score:</span>
                       <span
-                        className={`font-medium ${getScoreColor(weightedScore)}`}
+                        className={`font-medium ${getScoreColor(
+                          weightedScore
+                        )}`}
                       >
                         {weightedScore.toFixed(1)}
                       </span>
@@ -334,7 +345,9 @@ const AssessmentResult: React.FC<Props> = ({
                     <div className="flex justify-between">
                       <span className="text-gray-600">Normalized:</span>
                       <span
-                        className={`font-medium ${getScoreColor(normalizedScore)}`}
+                        className={`font-medium ${getScoreColor(
+                          normalizedScore
+                        )}`}
                       >
                         {normalizedScore.toFixed(1)}%
                       </span>
