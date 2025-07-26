@@ -1,3 +1,5 @@
+//app/readiness/page.tsx
+
 import React from "react";
 import { Activity, Zap, TrendingUp } from "lucide-react";
 import Footer from "../components/Footer";
@@ -30,26 +32,43 @@ const Page = () => {
     <section className="bg-white font-['Inter']">
       <NewNavbar />
 
-      {/* === SECTION 1: Hero Section with Image === */}
-      <section className="pt-4 md:pt-14 bg-gradient-to-br from-slate-50 via-white to-blue-50">
-        <div className="relative py-16 px-6 md:px-16 lg:px-24">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            {/* Text Content */}
+      {/* === SECTION 1: Hero Section with Video Background === */}
+      <section className="bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="relative py-24 px-6 md:px-16 lg:px-24 overflow-hidden">
+          {/* Background Video */}
+          <div className="absolute inset-0 z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="/video/readiness.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            {/* Text Content - Left Side */}
             <div className="flex-1 space-y-6">
-              <h1 className="text-3xl text-slate-700 leading-relaxed font-['Inter']">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl text-white leading-relaxed font-['Inter'] font-light mt-5">
                 THE READINESS INTELLIGENCE LAYER
               </h1>
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
+              <p className="text-lg md:text-xl text-white/90 leading-relaxed font-['Inter'] font-light">
                 Every individual emits signals — patterns of skill, pace, and
                 potential. Most systems miss them.
               </p>
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
-                At <span className="font-bold text-blue-600 font-['Inter']">XWORKS</span>,
+              <p className="text-base md:text-lg text-white/80 leading-relaxed font-['Inter'] font-light">
+                At <span className="font-bold text-yellow-300 font-['Inter']">XWORKS</span>,
                 readiness is not a score. It's a multi-dimensional alignment — of
                 cognition, adaptability, and industry signal resonance. We don't
                 just measure talent. We tune into it.
               </p>
-              <p className="text-base text-slate-700 leading-relaxed font-['Inter']">
+              <p className="text-base md:text-lg text-white/80 leading-relaxed font-['Inter'] font-light">
                 Behind the radar lies a proprietary readiness engine — trained on
                 future-of-work indicators, calibrated with employer thresholds,
                 and constantly learning from behavioral flux. What you see is just
@@ -57,35 +76,29 @@ const Page = () => {
               </p>
             </div>
 
-            {/* Right Image */}
-            <div className="flex-1">
-              <img
-                src="/images/Readiness.jpg"
-                alt="Readiness Engine Illustration"
-                width={600}
-                height={400}
-                className="rounded-xl shadow-md object-cover w-full"
-              />
-            </div>
+            {/* Right Side - Empty space for video to show through */}
+            <div className="flex-1 flex justify-center items-center"></div>
           </div>
 
-          {/* Cards Section - Updated to match model page design */}
-          <div className="mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
+          {/* Cards Section - Updated to match model page design with glass effect */}
+          <div className="relative z-10 mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
             {cards.map((card, index) => (
               <div
                 key={index}
                 className="group relative transition-all duration-500 hover:scale-105"
               >
-                <div
-                  className={`bg-gradient-to-r ${card.color} rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center`}
-                >
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
                   <div className="flex items-center justify-center mb-4">
-                    <card.icon className="w-10 h-10 text-white" />
+                    <div
+                      className={`bg-gradient-to-r ${card.color} rounded-full p-3`}
+                    >
+                      <card.icon className="w-6 h-6 text-white" />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white text-center mb-4 font-['Inter']">
+                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
                     {card.title}
                   </h3>
-                  <p className="text-sm text-white/90 text-center leading-relaxed font-['Inter']">
+                  <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
                     {card.description}
                   </p>
                 </div>
