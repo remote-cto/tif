@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import Image from "next/image";
+
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -143,7 +143,7 @@ const Page = () => {
                 playsInline
                 className="w-full h-full object-cover"
               >
-                <source src="/video/BgNew.mp4" type="video/mp4" />
+                <source src="/video/Bgnew.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div className="absolute inset-0 bg-black/40"></div>
