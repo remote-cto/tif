@@ -181,9 +181,8 @@ const Page = () => {
               {/* Right side - can be left empty or add some visual element */}
               <div className="flex-1 flex justify-center items-center"></div>
             </div>
-            {/* Cards Section */}
-            // Replace the cards section in your contact page with this updated
-            version
+            
+            
             {/* Cards Section */}
             <div className="relative z-10 mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
               {/* Card 1 - For Institutions */}
