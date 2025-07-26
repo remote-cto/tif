@@ -4,7 +4,7 @@ import React from "react";
 import { Activity, Zap, TrendingUp } from "lucide-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import NewNavbar from "../components/NewNavbar";
+
 
 const Page = () => {
   const cards = [
@@ -30,7 +30,7 @@ const Page = () => {
 
   return (
     <section className="bg-white font-['Inter']">
-      <NewNavbar />
+     <Navbar/>
 
       {/* === SECTION 1: Hero Section with Video Background === */}
       <section className="bg-gradient-to-br from-slate-50 via-white to-blue-50">

@@ -3,7 +3,7 @@ import React from "react";
 import { MapPin, CheckCircle, Target } from "lucide-react";
 import Footer from "../components/Footer";
 
-import NewNavbar from "../components/NewNavbar";
+import Navbar from "../components/Navbar";
 
 const Page = () => {
   const cards = [
@@ -32,7 +32,7 @@ const Page = () => {
 
   return (
     <section className="bg-white font-['Inter']">
-      <NewNavbar />
+     <Navbar/>
 
       
       <section className=" bg-gradient-to-br from-slate-50 via-white to-green-50">

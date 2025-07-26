@@ -148,7 +148,6 @@ const Page = () => {
               </video>
               <div className="absolute inset-0 bg-black/40"></div>
             </div>
-
             {/* Content */}
             <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
               {/* Text Content - Left Side */}
@@ -170,25 +169,35 @@ const Page = () => {
                   signal.
                 </p>
                 <p className="text-base md:text-lg text-white/80 leading-relaxed font-['Inter'] font-light">
-                  No forms. No bots. Just a conversation. Because the future won't
-                  be built by funnels. It'll be built by{" "}
+                  No forms. No bots. Just a conversation. Because the future
+                  won't be built by funnels. It'll be built by{" "}
                   <span className="font-bold text-yellow-300 font-['Inter']">
                     resonance
-                  </span>.
+                  </span>
+                  .
                 </p>
               </div>
 
               {/* Right side - can be left empty or add some visual element */}
               <div className="flex-1 flex justify-center items-center"></div>
             </div>
-
+            {/* Cards Section */}
+            // Replace the cards section in your contact page with this updated
+            version
             {/* Cards Section */}
             <div className="relative z-10 mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
-              {/* Card 1 */}
+              {/* Card 1 - For Institutions */}
               <div className="group relative transition-all duration-500 hover:scale-105">
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <h3 className="text-xl font-bold text-blue-700 text-center mb-4 font-['Inter']">
-                    🟨 For Institutions
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full p-3">
+                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
+                        🏛️
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
+                    For Institutions
                   </h3>
                   <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
                     Looking to rewire placement models? Launch AI-first skill
@@ -197,24 +206,38 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Card 2 */}
+              {/* Card 2 - For Business */}
               <div className="group relative transition-all duration-500 hover:scale-105">
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <h3 className="text-xl font-bold text-blue-700 text-center mb-4 font-['Inter']">
-                    🟨 For Business
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3">
+                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
+                        💼
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
+                    For Business
                   </h3>
                   <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
-                    Tired of paper résumés and generic assessments? Let's show you
-                    signal-based hiring.
+                    Tired of paper résumés and generic assessments? Let's show
+                    you signal-based hiring.
                   </p>
                 </div>
               </div>
 
-              {/* Card 3 */}
+              {/* Card 3 - For Policy & Ecosystems */}
               <div className="group relative transition-all duration-500 hover:scale-105">
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <h3 className="text-xl font-bold text-blue-700 text-center mb-4 font-['Inter']">
-                    🟨 For Policy & Ecosystems
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full p-3">
+                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
+                        🌐
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
+                    For Policy & Ecosystems
                   </h3>
                   <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
                     Building regional, equitable, intelligent talent networks?
