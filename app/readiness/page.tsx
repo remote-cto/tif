@@ -79,26 +79,26 @@ const Page = () => {
             {/* Right Side - Empty space for video to show through */}
             <div className="flex-1 flex justify-center items-center"></div>
           </div>
+        </div>
 
-          {/* Cards Section - Updated to match model page design with glass effect */}
-          <div className="relative z-10 mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
+        {/* Cards Section - Now outside the video background */}
+        <div className="py-16 px-6 md:px-16 lg:px-24">
+          <div className="flex flex-wrap items-center justify-center gap-8 max-w-8xl mx-auto">
             {cards.map((card, index) => (
               <div
                 key={index}
-                className="group relative transition-all duration-500 hover:scale-105"
+                className="group relative transition-all duration-500 hover:scale-110"
               >
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <div className="flex items-center justify-center mb-4">
-                    <div
-                      className={`bg-gradient-to-r ${card.color} rounded-full p-3`}
-                    >
-                      <card.icon className="w-6 h-6 text-white" />
-                    </div>
+                <div
+                  className={`bg-gradient-to-r ${card.color} rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-w-[280px] max-w-[280px] min-h-[250px] flex flex-col justify-center`}
+                >
+                  <div className="flex items-center justify-center mb-3">
+                    <card.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
+                  <h3 className="text-xl font-bold text-white text-center mb-2 font-['Inter']">
                     {card.title}
                   </h3>
-                  <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
+                  <p className="text-sm text-white/90 text-center leading-relaxed font-['Inter']">
                     {card.description}
                   </p>
                 </div>

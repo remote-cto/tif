@@ -1,9 +1,11 @@
+//app/contact/page.tsx
+
 "use client";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
+import Image from "next/image";
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -127,11 +129,35 @@ const Page = () => {
     placeholder-gray-500
   `;
 
+  const cards = [
+    {
+      title: "For Institutions",
+      description:
+        "Looking to rewire placement models? Launch AI-first skill hubs? Let's co-create readiness.",
+      color: "from-blue-500 to-cyan-500",
+      emoji: "🏛️",
+    },
+    {
+      title: "For Business",
+      description:
+        "Tired of paper résumés and generic assessments? Let's show you signal-based hiring.",
+      color: "from-purple-500 to-pink-500",
+      emoji: "💼",
+    },
+    {
+      title: "For Policy & Ecosystems",
+      description:
+        "Building regional, equitable, intelligent talent networks? Let's align intentions.",
+      color: "from-cyan-500 to-teal-500",
+      emoji: "🌐",
+    },
+  ];
+
   return (
     <>
       <Navbar />
       <section className="bg-white font-['Inter']">
-        {/* Hero Section with Video Background - Similar to Model Page */}
+        {/* Hero Section with Video Background */}
         <section className="bg-gradient-to-br from-slate-50 via-white to-yellow-50">
           <div className="relative py-24 px-6 md:px-16 lg:px-24 overflow-hidden">
             {/* Background Video */}
@@ -143,7 +169,7 @@ const Page = () => {
                 playsInline
                 className="w-full h-full object-cover"
               >
-                <source src="/video/Bgnew.mp4" type="video/mp4" />
+                <source src="/video/BgNew.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div className="absolute inset-0 bg-black/40"></div>
@@ -181,72 +207,34 @@ const Page = () => {
               {/* Right side - can be left empty or add some visual element */}
               <div className="flex-1 flex justify-center items-center"></div>
             </div>
-            
-            
-            {/* Cards Section */}
-            <div className="relative z-10 mt-16 grid gap-8 md:grid-cols-3 max-w-7xl mx-auto">
-              {/* Card 1 - For Institutions */}
-              <div className="group relative transition-all duration-500 hover:scale-105">
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full p-3">
-                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
-                        🏛️
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
-                    For Institutions
-                  </h3>
-                  <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
-                    Looking to rewire placement models? Launch AI-first skill
-                    hubs? Let's co-create readiness.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 2 - For Business */}
-              <div className="group relative transition-all duration-500 hover:scale-105">
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3">
-                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
-                        💼
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
-                    For Business
-                  </h3>
-                  <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
-                    Tired of paper résumés and generic assessments? Let's show
-                    you signal-based hiring.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 3 - For Policy & Ecosystems */}
-              <div className="group relative transition-all duration-500 hover:scale-105">
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[200px] flex flex-col justify-center border border-white/20">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full p-3">
-                      <div className="w-6 h-6 text-white flex items-center justify-center text-lg font-bold">
-                        🌐
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-800 text-center mb-4 font-['Inter']">
-                    For Policy & Ecosystems
-                  </h3>
-                  <p className="text-sm text-slate-600 text-center leading-relaxed font-['Inter']">
-                    Building regional, equitable, intelligent talent networks?
-                    Let's align intentions.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
+
+        {/* Cards Section - Now outside the video background */}
+        <div className="py-16 px-6 md:px-16 lg:px-24 bg-gradient-to-br from-slate-50 via-white to-yellow-50">
+          <div className="flex flex-wrap items-center justify-center gap-8 max-w-8xl mx-auto">
+            {cards.map((card, index) => (
+              <div
+                key={index}
+                className="group relative transition-all duration-500 hover:scale-110"
+              >
+                <div
+                  className={`bg-gradient-to-r ${card.color} rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer min-w-[280px] max-w-[280px] min-h-[250px] flex flex-col justify-center`}
+                >
+                  <div className="flex items-center justify-center mb-3">
+                    <div className="text-3xl">{card.emoji}</div>
+                  </div>
+                  <h3 className="text-xl font-bold text-white text-center mb-2 font-['Inter']">
+                    {card.title}
+                  </h3>
+                  <p className="text-sm text-white/90 text-center leading-relaxed font-['Inter']">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Contact Form Section */}
         <section className="bg-white font-mono relative overflow-hidden">
